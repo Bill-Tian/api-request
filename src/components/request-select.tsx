@@ -12,23 +12,25 @@ interface ModelPickerProps {
   // setSelectedModel: (model: modelID) => void;
 }
 
-export const ModelSelector = ({}: ModelPickerProps) => {
-  let defaultMethod = RequestMethod[0].value;
+export const RequestSelector = ({}: ModelPickerProps) => {
 
+  const defaultMethod = RequestMethod[0].value;
   const [selectedMethod, setSelectedMethod] = useState(defaultMethod);
   // If the selected model is invalid, update it to the default
   useEffect(() => {}, []);
 
   // Handle model change
-  const handleModelChange = (modelId: string) => {};
+  const handleModelChange = (value: string) => {
+    setSelectedMethod(value);
+  };
 
   return (
-    <Select.Root>
+    <Select.Root  value={selectedMethod} defaultValue={defaultMethod} onValueChange={handleModelChange}>
       <Select.Trigger
         className="inline-flex h-[35px] items-center justify-center gap-[5px] rounded bg-white px-[15px] text-[13px] leading-none text-violet11 shadow-[0_2px_10px] shadow-black/10 outline-none hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-violet9"
         aria-label="Food"
       >
-        <Select.Value placeholder="Select a fruit…" />
+        <Select.Value/>
         <Select.Icon className="text-violet11">
           <ChevronDownIcon />
         </Select.Icon>
@@ -40,11 +42,9 @@ export const ModelSelector = ({}: ModelPickerProps) => {
           </Select.ScrollUpButton>
           <Select.Viewport className="p-[5px]">
             <Select.Group>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
+              {RequestMethod.map(item=>{
+                return  <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
+              })}
             </Select.Group>
           </Select.Viewport>
           <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-violet11">
