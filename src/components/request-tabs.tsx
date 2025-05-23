@@ -2,17 +2,16 @@
 
 import * as React from 'react';
 
-import { cn } from '@/lib/utils';
-
 import * as Tabs from '@radix-ui/react-tabs';
 import { ParamType, TabParam } from './tab-param';
 import { TabBody } from './tab-body';
 import { Button } from './ui/button';
 import { Plus } from 'lucide-react';
 
-export const RequestTabs = ({ className, type, ...props }: any) => {
+export const RequestTabs = () => {
   const [paramsList, setParamsList] = React.useState<ParamType[]>([{ key: '', value: '' }]);
   const [headersList, setHeadersList] = React.useState<ParamType[]>([{ key: '', value: '' }]);
+  const [bodyValue, setBodyValue] = React.useState<string>(``);
 
   const handleParamChange = (index: number, field: 'key' | 'value', value: string) => {
     setParamsList((prev) => {
@@ -44,6 +43,11 @@ export const RequestTabs = ({ className, type, ...props }: any) => {
 
   const handleDeleteHeader = (index: number) => {
     setHeadersList((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleBodyChange = (val: string) => {
+    console.log(val);
+    setBodyValue(val);
   };
 
   return (
@@ -115,7 +119,7 @@ export const RequestTabs = ({ className, type, ...props }: any) => {
         className="grow rounded-b-md bg-white py-5 outline-none"
         value="tab3"
       >
-        <TabBody />
+        <TabBody codeValue={bodyValue} onChange={handleBodyChange} />
       </Tabs.Content>
     </Tabs.Root>
   );

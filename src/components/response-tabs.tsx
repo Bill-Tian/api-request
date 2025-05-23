@@ -2,16 +2,17 @@
 
 import * as React from 'react';
 
-import { cn } from '@/lib/utils';
-
 import * as Tabs from '@radix-ui/react-tabs';
 import { ParamType, TabParam } from './tab-param';
 import { TabBody } from './tab-body';
-import { Button } from './ui/button';
-import { Plus } from 'lucide-react';
 
-export const ResponseTabs = ({ className, type, ...props }: any) => {
-  const [headersList, setHeadersList] = React.useState<ParamType[]>([{ key: '232', value: '323' }]);
+export const ResponseTabs = () => {
+  const [headersList, setHeadersList] = React.useState<ParamType[]>([]);
+
+  React.useEffect(() => {
+    console.log(headersList);
+    setHeadersList([{ key: '232', value: '323' }]);
+  }, [headersList]);
 
   return (
     <>
@@ -38,7 +39,7 @@ export const ResponseTabs = ({ className, type, ...props }: any) => {
           className="grow rounded-b-md bg-white py-5 outline-none"
           value="tab1"
         >
-          <TabBody editable={false} />
+          <TabBody editable={false} codeValue={''} />
         </Tabs.Content>
         <Tabs.Content
           className="grow rounded-b-md bg-white py-5 outline-none"

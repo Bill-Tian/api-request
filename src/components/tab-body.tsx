@@ -6,21 +6,23 @@ import { json } from '@codemirror/lang-json';
 
 export const TabBody = ({
   editable = true,
+  codeValue,
   onChange,
 }: {
   editable?: boolean;
-  onChange?: (index: number, field: 'key' | 'value', value: string) => void;
+  codeValue: string;
+  onChange?: (val: string) => void;
 }) => {
-  const [value, setValue] = React.useState(``);
-
   return (
     <div className="[&_.cm-content]:font-roboto-mono text-sm">
       <CodeMirror
-        value={value}
+        value={codeValue}
         height="200px"
-        width='100%'
+        width="100%"
         extensions={[json()]}
-        onChange={(val) => setValue(val)}
+        onChange={(val) => {
+          onChange?.(val);
+        }}
         editable={editable}
         basicSetup={{
           lineNumbers: true,

@@ -1,18 +1,12 @@
 "use client";
 import { RequestMethod } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { Sparkles, Zap, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import * as Select from "@radix-ui/react-select";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { SelectItem } from "./ui/select";
 
-interface ModelPickerProps {
-  // selectedModel: modelID;
-  // setSelectedModel: (model: modelID) => void;
-}
 
-export const RequestSelector = ({}: ModelPickerProps) => {
+export const RequestSelector = () => {
 
   const defaultMethod = RequestMethod[0].value;
   const [selectedMethod, setSelectedMethod] = useState(defaultMethod);
