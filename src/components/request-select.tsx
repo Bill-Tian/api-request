@@ -21,20 +21,20 @@ export const RequestSelector = () => {
   return (
     <Select.Root  value={selectedMethod} defaultValue={defaultMethod} onValueChange={handleModelChange}>
       <Select.Trigger
-        className="inline-flex w-[120px] h-8 items-center justify-center gap-[5px] rounded bg-[#f9fafb] px-[15px] text-[13px] leading-none text-violet-950 outline-none hover:bg-zinc-200 data-[placeholder]:text-violet-800"
+        className="relative inline-flex w-32 h-8 border border-input text-[13px] font-medium items-center gap-[5px] cursor-pointer rounded-l-sm bg-[#f9fafb] px-4 leading-none text-violet-950 outline-none data-[placeholder]:text-violet-800"
         aria-label="Food"
       >
         <Select.Value/>
         <Select.Icon className="text-violet-950">
-          <ChevronDownIcon />
+          <ChevronDownIcon size={16} className="absolute right-2 top-1/2 -translate-y-1/2" />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
         <Select.Content className="overflow-hidden rounded-md bg-white border border-solid border-gray-200">
           <Select.ScrollUpButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-violet-950">
-            <ChevronUpIcon />
+            <ChevronUpIcon size={16} />
           </Select.ScrollUpButton>
-          <Select.Viewport className="p-[2px]">
+          <Select.Viewport className="p-1">
             <Select.Group>
               {RequestMethod.map(item=>{
                 return  <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
@@ -42,7 +42,7 @@ export const RequestSelector = () => {
             </Select.Group>
           </Select.Viewport>
           <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-violet-950">
-            <ChevronDownIcon />
+            <ChevronDownIcon size={16} />
           </Select.ScrollDownButton>
         </Select.Content>
       </Select.Portal>

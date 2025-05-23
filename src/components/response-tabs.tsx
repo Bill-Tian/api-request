@@ -5,53 +5,58 @@ import * as React from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { ParamType, TabParam } from './tab-param';
 import { TabBody } from './tab-body';
+import { TabsTrigger } from './ui/tabs';
+import { cn } from '@/lib/utils';
 
 export const ResponseTabs = () => {
-  const [headersList, setHeadersList] = React.useState<ParamType[]>([]);
+  const [headersList] = React.useState<ParamType[]>([]);
 
-  React.useEffect(() => {
-    console.log(headersList);
-    setHeadersList([{ key: '232', value: '323' }]);
-  }, [headersList]);
+  const isSuccess = true;
 
   return (
-    <>
-      <h2 className="text-2xl font-bold">Response</h2>
+    <div>
+      <h3 className="text-xl font-bold">Response</h3>
+      <div className="flex items-center text-sm font-semibold my-4">
+        <div
+          className={cn('inline-flex flex-1 space-x-4', {
+            'text-green-500': isSuccess,
+            'text-red-500': !isSuccess,
+          })}
+        >
+          <span>
+            <span className="text-gray-800">Status: </span> 200&nbsp; • &nbsp;OK
+          </span>
+          <span>
+            <span className="text-gray-800">Time: </span> 1901 ms
+          </span>
+          <span>
+            <span className="text-gray-800">Size: </span> 62 B
+          </span>
+        </div>
+      </div>
       <Tabs.Root className="flex w-[800px] flex-col" defaultValue="tab1">
         <Tabs.List
-          className="flex shrink-0 border-b border-zinc-600"
+          className="flex shrink-0 border-b border-zinc-200"
           aria-label="Manage your account"
         >
-          <Tabs.Trigger
-            className="flex h-[45px] flex-1 cursor-default select-none items-center justify-center bg-white px-5 text-[15px] leading-none text-zinc-800 outline-none first:rounded-tl-md last:rounded-tr-md hover:text-violet-900 data-[state=active]:text-violet-900 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current "
-            value="tab1"
-          >
-            响应体
-          </Tabs.Trigger>
-          <Tabs.Trigger
-            className="flex h-[45px] flex-1 cursor-default select-none items-center justify-center bg-white px-5 text-[15px] leading-none text-zinc-800 outline-none first:rounded-tl-md last:rounded-tr-md hover:text-violet-900 data-[state=active]:text-violet-900 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current "
-            value="tab2"
-          >
-            响应头
-          </Tabs.Trigger>
+          <TabsTrigger value="tab1">Response Body</TabsTrigger>
+          <TabsTrigger value="tab2">Response Header</TabsTrigger>
         </Tabs.List>
-        <Tabs.Content
-          className="grow rounded-b-md bg-white py-5 outline-none"
-          value="tab1"
-        >
+        <Tabs.Content className="grow rounded-b-md bg-white py-5 outline-none" value="tab1">
           <TabBody editable={false} codeValue={''} />
         </Tabs.Content>
-        <Tabs.Content
-          className="grow rounded-b-md bg-white py-5 outline-none"
-          value="tab2"
-        >
-          <div className="space-y-2 px-4">
+        <Tabs.Content className="grow rounded-b-md bg-white py-2 outline-none" value="tab2">
+          <label className="inline-block text-sm font-medium text-gray-500 mb-2">
+            {' '}
+            Header List{' '}
+          </label>
+          <div className="space-y-2">
             {headersList.map((item, index) => (
               <TabParam key={index} param={item} index={index} />
             ))}
           </div>
         </Tabs.Content>
       </Tabs.Root>
-    </>
+    </div>
   );
 };

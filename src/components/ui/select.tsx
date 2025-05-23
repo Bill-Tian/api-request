@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { CheckIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -15,15 +14,12 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex h-8 select-none items-center rounded-[3px] pl-6 pr-6 text-[13px] leading-none text-violet-950 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet-800 data-[disabled]:text-zinc-500 data-[highlighted]:text-violet-100 data-[highlighted]:outline-none",
+        "flex h-8 select-none items-center rounded px-2 text-[12px] font-bold leading-none text-violet-950 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet-400 data-[disabled]:text-zinc-500 data-[highlighted]:text-violet-100 data-[highlighted]:outline-none",
         className
       )}
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-      <SelectPrimitive.ItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
-        <CheckIcon />
-      </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   );
 }
