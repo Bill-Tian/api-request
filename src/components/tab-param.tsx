@@ -20,8 +20,8 @@ export const TabParam = ({
 }: { 
     param: ParamType;
     index: number;
-    onChange: (index: number, field: 'key' | 'value', value: string) => void;
-    onDelete: (index: number) => void;
+    onChange?: (index: number, field: 'key' | 'value', value: string) => void;
+    onDelete?: (index: number) => void;
 }) => {
     return (
         <div className="flex gap-2 items-center">
@@ -29,19 +29,21 @@ export const TabParam = ({
                 placeholder="Key" 
                 className='rounded-none' 
                 value={param.key} 
-                onChange={(e) => onChange(index, 'key', e.target.value)}
+                disabled={!onChange}
+                onChange={(e) => onChange && onChange(index, 'key', e.target.value)}
             />
             <Input 
                 placeholder="Value" 
                 className='rounded-none' 
                 value={param.value}
-                onChange={(e) => onChange(index, 'value', e.target.value)}
+                disabled={!onChange}
+                onChange={(e) => onChange && onChange(index, 'value', e.target.value)}
             />
             <Trash 
-                className='shrink-0 cursor-pointer' 
+                className={cn('shrink-0 cursor-pointer', !onDelete && 'hidden')}
                 size={16} 
                 color='#ff2e2e'
-                onClick={() => onDelete(index)}
+                onClick={() => onDelete && onDelete(index)}
             />
         </div>
     );
