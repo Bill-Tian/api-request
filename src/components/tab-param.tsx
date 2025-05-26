@@ -27,7 +27,7 @@ export const TabParam = ({
   onDelete?: (index: number) => void;
 }) => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center gap-2 mb-2">
       {isHeader ? (
         <AutocompleteInput
           value={param.key}

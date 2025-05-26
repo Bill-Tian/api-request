@@ -17,7 +17,7 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        'flex h-8 cursor-pointer select-none items-center justify-center bg-white mr-8 text-sm font-semibold leading-none text-zinc-800 outline-none first:rounded-tl-md last:rounded-tr-md hover:text-violet-900 data-[state=active]:text-violet-900 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current',
+        'flex h-8 cursor-pointer select-none items-center justify-center bg-white mr-8 text-sm font-semibold leading-none text-zinc-800 outline-none hover:text-violet-900 data-[state=active]:text-violet-900 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current',
         className,
       )}
       {...props}

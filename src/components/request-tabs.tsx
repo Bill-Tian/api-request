@@ -7,6 +7,7 @@ import { ParamType, TabParam } from './tab-param';
 import { TabBody } from './tab-body';
 import { Plus } from 'lucide-react';
 import { TabsTrigger } from './ui/tabs';
+import { DataEmpty } from './data-empty';
 
 export const RequestTabs = () => {
   const [paramsList, setParamsList] = React.useState<ParamType[]>([{ key: '', value: '' }]);
@@ -51,7 +52,7 @@ export const RequestTabs = () => {
   };
 
   return (
-    <Tabs.Root className="flex w-[800px] flex-col" defaultValue="tab1">
+    <Tabs.Root className="flex w-[900px] flex-col" defaultValue="tab1">
       <Tabs.List
         className="flex shrink-0 border-b border-zinc-200"
         aria-label="Manage your account"
@@ -60,44 +61,72 @@ export const RequestTabs = () => {
         <TabsTrigger value="tab2">Headers</TabsTrigger>
         <TabsTrigger value="tab3">Body</TabsTrigger>
       </Tabs.List>
-      <Tabs.Content className="grow rounded-b-md bg-white py-2 outline-none" value="tab1">
-        <div className="relative">
-          <label className="inline-block text-sm font-medium text-gray-500 mb-2">
-            Query Parameters
-          </label>
-          {paramsList.map((item, index) => (
-            <TabParam
-              key={index}
-              param={item}
-              index={index}
-              onChange={handleParamChange}
-              onDelete={handleDeleteParam}
-            />
-          ))}
-          <div className="absolute right-0 top-1 flex items-center">
-            <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddParam} />
+      <Tabs.Content
+        className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6]"
+        value="tab1"
+      >
+        <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
+          <div className="flex items-center justify-between mb-1">
+            <label className="inline-block text-sm font-medium text-gray-500 mb-2">
+              Query Parameters
+            </label>
+            <div className="flex items-center">
+              <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddParam} />
+            </div>
           </div>
+
+          {paramsList.length === 0 ? (
+            <div className="flex items-center justify-center h-[calc(100%-32px)]">
+              <DataEmpty />
+            </div>
+          ) : (
+            paramsList.map((item, index) => (
+              <TabParam
+                key={index}
+                param={item}
+                index={index}
+                onChange={handleParamChange}
+                onDelete={handleDeleteParam}
+              />
+            ))
+          )}
         </div>
       </Tabs.Content>
-      <Tabs.Content className="grow rounded-b-md bg-white py-2 outline-none" value="tab2">
-        <div className="relative">
-          <label className="inline-block text-sm font-medium text-gray-500 mb-2">Header List</label>
-          {headersList.map((item, index) => (
-            <TabParam
-              isHeader={true}
-              key={index}
-              param={item}
-              index={index}
-              onChange={handleHeaderChange}
-              onDelete={handleDeleteHeader}
-            />
-          ))}
-          <div className="absolute right-0 top-1 flex items-center">
-            <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddHeader} />
+      <Tabs.Content
+        className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6]"
+        value="tab2"
+      >
+        <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
+          <div className="flex items-center justify-between mb-1">
+            <label className="inline-block text-sm font-medium text-gray-500 mb-2">
+              Header List
+            </label>
+            <div className="flex items-center">
+              <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddHeader} />
+            </div>
           </div>
+          {headersList.length === 0 ? (
+            <div className="flex items-center justify-center h-[calc(100%-32px)]">
+              <DataEmpty />
+            </div>
+          ) : (
+            headersList.map((item, index) => (
+              <TabParam
+                isHeader={true}
+                key={index}
+                param={item}
+                index={index}
+                onChange={handleHeaderChange}
+                onDelete={handleDeleteHeader}
+              />
+            ))
+          )}
         </div>
       </Tabs.Content>
-      <Tabs.Content className="grow rounded-b-md bg-white py-5 outline-none" value="tab3">
+      <Tabs.Content
+        className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6] overflow-auto custom-scrollbar"
+        value="tab3"
+      >
         <TabBody codeValue={bodyValue} onChange={handleBodyChange} />
       </Tabs.Content>
     </Tabs.Root>
