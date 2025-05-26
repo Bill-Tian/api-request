@@ -4,15 +4,26 @@ import { useState, useEffect } from "react";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "./ui/select";
 import { ChevronDownIcon } from "lucide-react";
 
-export const RequestSelector = () => {
+interface RequestSelectorProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export const RequestSelector = ({ value, onChange }: RequestSelectorProps) => {
   const defaultMethod = RequestMethod[0].value;
-  const [selectedMethod, setSelectedMethod] = useState(defaultMethod);
+  const [selectedMethod, setSelectedMethod] = useState(value || defaultMethod);
+
   // If the selected model is invalid, update it to the default
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!value) {
+      onChange(defaultMethod);
+    }
+  }, []);
 
   // Handle model change
-  const handleModelChange = (value: string) => {
-    setSelectedMethod(value);
+  const handleModelChange = (newValue: string) => {
+    setSelectedMethod(newValue);
+    onChange(newValue);
   };
 
   return (

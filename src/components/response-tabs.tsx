@@ -9,11 +9,14 @@ import { TabsTrigger } from './ui/tabs';
 import { cn } from '@/lib/utils';
 import { DataEmpty } from './data-empty';
 
-export const ResponseTabs = () => {
+interface ResponseTabsProps {
+  activeTab: string;
+  onTabChange: (value: string) => void;
+}
+
+export const ResponseTabs = ({ activeTab, onTabChange }: ResponseTabsProps) => {
   const [headersList] = React.useState<ParamType[]>([]);
-
   const isSuccess = true;
-
   const [responseBody] = React.useState<string>('');
 
   return (
@@ -37,7 +40,7 @@ export const ResponseTabs = () => {
           </span>
         </div>
       </div>
-      <Tabs.Root className="flex w-[900px] flex-col" defaultValue="tab1">
+      <Tabs.Root value={activeTab} onValueChange={onTabChange}>
         <Tabs.List
           className="flex shrink-0 border-b border-zinc-200"
           aria-label="Manage your account"
@@ -47,15 +50,13 @@ export const ResponseTabs = () => {
         </Tabs.List>
         <Tabs.Content className="grow rounded-b-md bg-white py-5 outline-none" value="tab1">
           <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
-            {
-              responseBody ? (
-                <TabBody editable={false} codeValue={''} />
+            {responseBody ? (
+              <TabBody editable={false} codeValue={''} />
             ) : (
               <div className="flex items-center justify-center h-full">
                 <DataEmpty />
               </div>
-            )
-            }
+            )}
           </div>
         </Tabs.Content>
         <Tabs.Content className="grow rounded-b-md bg-white py-2 outline-none" value="tab2">

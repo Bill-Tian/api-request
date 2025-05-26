@@ -4,13 +4,56 @@ import { RequestResponse } from './request-response';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Plus, X, Dot } from 'lucide-react';
 
+interface TabData {
+  id: number;
+  title: string;
+  requestData: {
+    method: string;
+    url: string;
+    params: Array<{ key: string; value: string }>;
+    headers: Array<{ key: string; value: string }>;
+    body: string;
+  };
+  activeRequestTab: string;
+  activeResponseTab: string;
+}
+
 export function RequestResponseTabs() {
-  const [tabs, setTabs] = useState([{ id: 1, title: 'Request 1' }]);
+  const [tabs, setTabs] = useState<TabData[]>([
+    {
+      id: 1,
+      title: 'Request 1',
+      requestData: {
+        method: 'GET',
+        url: '',
+        params: [{ key: '', value: '' }],
+        headers: [{ key: '', value: '' }],
+        body: '',
+      },
+      activeRequestTab: 'tab1',
+      activeResponseTab: 'tab1',
+    },
+  ]);
   const [activeTab, setActiveTab] = useState('1');
 
   const addNewTab = () => {
     const newId = tabs.length + 1;
-    setTabs([...tabs, { id: newId, title: `Request ${newId}` }]);
+    setTabs([
+      ...tabs,
+      {
+        id: newId,
+        title: `Request ${newId}`,
+        requestData: {
+          method: 'GET',
+          url: '',
+          params: [{ key: '', value: '' }],
+          headers: [{ key: '', value: '' }],
+          body: '',
+        },
+        activeRequestTab: 'tab1',
+        activeResponseTab: 'tab1',
+      },
+    ]);
     setActiveTab(newId.toString());
   };
 
@@ -21,6 +64,48 @@ export function RequestResponseTabs() {
     if (activeTab === id.toString()) {
       setActiveTab(newTabs[newTabs.length - 1].id.toString());
     }
+  };
+
+  const updateTabData = (id: number, newData: Partial<TabData['requestData']>) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) =>
+        tab.id === id
+          ? {
+              ...tab,
+              requestData: {
+                ...tab.requestData,
+                ...newData,
+              },
+            }
+          : tab
+      )
+    );
+  };
+
+  const updateActiveRequestTab = (id: number, value: string) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) =>
+        tab.id === id
+          ? {
+              ...tab,
+              activeRequestTab: value,
+            }
+          : tab
+      )
+    );
+  };
+
+  const updateActiveResponseTab = (id: number, value: string) => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) =>
+        tab.id === id
+          ? {
+              ...tab,
+              activeResponseTab: value,
+            }
+          : tab
+      )
+    );
   };
 
   return (
@@ -61,7 +146,14 @@ export function RequestResponseTabs() {
         </TabsList>
         {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.id.toString()}>
-            <RequestResponse />
+            <RequestResponse
+              data={tab.requestData}
+              onDataChange={(newData) => updateTabData(tab.id, newData)}
+              activeRequestTab={tab.activeRequestTab}
+              activeResponseTab={tab.activeResponseTab}
+              onRequestTabChange={(value) => updateActiveRequestTab(tab.id, value)}
+              onResponseTabChange={(value) => updateActiveResponseTab(tab.id, value)}
+            />
           </TabsContent>
         ))}
       </Tabs>

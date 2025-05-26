@@ -9,50 +9,61 @@ import { Plus } from 'lucide-react';
 import { TabsTrigger } from './ui/tabs';
 import { DataEmpty } from './data-empty';
 
-export const RequestTabs = () => {
-  const [paramsList, setParamsList] = React.useState<ParamType[]>([{ key: '', value: '' }]);
-  const [headersList, setHeadersList] = React.useState<ParamType[]>([{ key: '', value: '' }]);
-  const [bodyValue, setBodyValue] = React.useState<string>(``);
+interface RequestTabsProps {
+  params: ParamType[];
+  headers: ParamType[];
+  body: string;
+  onParamsChange: (params: ParamType[]) => void;
+  onHeadersChange: (headers: ParamType[]) => void;
+  onBodyChange: (body: string) => void;
+  activeTab: string;
+  onTabChange: (value: string) => void;
+}
 
+export const RequestTabs = ({
+  params,
+  headers,
+  body,
+  onParamsChange,
+  onHeadersChange,
+  onBodyChange,
+  activeTab,
+  onTabChange,
+}: RequestTabsProps) => {
   const handleParamChange = (index: number, field: 'key' | 'value', value: string) => {
-    setParamsList((prev) => {
-      const newList = [...prev];
-      newList[index] = { ...newList[index], [field]: value };
-      return newList;
-    });
+    const newParams = [...params];
+    newParams[index] = { ...newParams[index], [field]: value };
+    onParamsChange(newParams);
   };
 
   const handleHeaderChange = (index: number, field: 'key' | 'value', value: string) => {
-    setHeadersList((prev) => {
-      const newList = [...prev];
-      newList[index] = { ...newList[index], [field]: value };
-      return newList;
-    });
+    const newHeaders = [...headers];
+    newHeaders[index] = { ...newHeaders[index], [field]: value };
+    onHeadersChange(newHeaders);
   };
 
   const handleAddParam = () => {
-    setParamsList((prev) => [...prev, { key: '', value: '' }]);
+    onParamsChange([...params, { key: '', value: '' }]);
   };
 
   const handleAddHeader = () => {
-    setHeadersList((prev) => [...prev, { key: '', value: '' }]);
+    onHeadersChange([...headers, { key: '', value: '' }]);
   };
 
   const handleDeleteParam = (index: number) => {
-    setParamsList((prev) => prev.filter((_, i) => i !== index));
+    onParamsChange(params.filter((_, i) => i !== index));
   };
 
   const handleDeleteHeader = (index: number) => {
-    setHeadersList((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleBodyChange = (val: string) => {
-    console.log(val);
-    setBodyValue(val);
+    onHeadersChange(headers.filter((_, i) => i !== index));
   };
 
   return (
-    <Tabs.Root className="flex w-[900px] flex-col" defaultValue="tab1">
+    <Tabs.Root 
+      className="flex w-[900px] flex-col" 
+      value={activeTab} 
+      onValueChange={onTabChange}
+    >
       <Tabs.List
         className="flex shrink-0 border-b border-zinc-200"
         aria-label="Manage your account"
@@ -75,12 +86,12 @@ export const RequestTabs = () => {
             </div>
           </div>
 
-          {paramsList.length === 0 ? (
+          {params.length === 0 ? (
             <div className="flex items-center justify-center h-[calc(100%-32px)]">
               <DataEmpty />
             </div>
           ) : (
-            paramsList.map((item, index) => (
+            params.map((item, index) => (
               <TabParam
                 key={index}
                 param={item}
@@ -105,12 +116,12 @@ export const RequestTabs = () => {
               <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddHeader} />
             </div>
           </div>
-          {headersList.length === 0 ? (
+          {headers.length === 0 ? (
             <div className="flex items-center justify-center h-[calc(100%-32px)]">
               <DataEmpty />
             </div>
           ) : (
-            headersList.map((item, index) => (
+            headers.map((item, index) => (
               <TabParam
                 isHeader={true}
                 key={index}
@@ -127,7 +138,7 @@ export const RequestTabs = () => {
         className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6] overflow-auto custom-scrollbar"
         value="tab3"
       >
-        <TabBody codeValue={bodyValue} onChange={handleBodyChange} />
+        <TabBody codeValue={body} onChange={onBodyChange} />
       </Tabs.Content>
     </Tabs.Root>
   );
