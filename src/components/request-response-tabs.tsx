@@ -27,7 +27,7 @@ export function RequestResponseTabs() {
         method: 'GET',
         url: '',
         params: [{ key: '', value: '' }],
-        headers: [{ key: '', value: '' }],
+        headers: [{ key: 'content-Type', value: 'application/json' }],
         body: '',
       },
       activeRequestTab: 'tab1',

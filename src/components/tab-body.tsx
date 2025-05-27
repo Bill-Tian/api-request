@@ -3,6 +3,7 @@
 import * as React from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
+import { EditorView } from '@codemirror/view';
 
 export const TabBody = ({
   editable = true,
@@ -17,9 +18,9 @@ export const TabBody = ({
     <div className="[&_.cm-content]:font-roboto-mono text-sm">
       <CodeMirror
         value={codeValue}
-        height="200px"
-        width="100%"
-        extensions={[json()]}
+        height="240px"
+        width="900px"
+        extensions={[json(),EditorView.lineWrapping]}
         onChange={(val) => {
           onChange?.(val);
         }}
