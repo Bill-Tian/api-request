@@ -6,15 +6,27 @@ import { ResponseTabs } from '@/components/response-tabs';
 import { sendRequest } from '@/lib/request';
 import { useState } from 'react';
 
+interface RequestData {
+  method: string;
+  url: string;
+  params: Array<{ key: string; value: string }>;
+  headers: Array<{ key: string; value: string }>;
+  body: string;
+}
+
+interface ResponseState {
+  data: any;
+  type: string;
+  status: number;
+  duration: number;
+  size: number;
+  orginHeaders: string;
+  error: string | null;
+}
+
 interface RequestResponseProps {
-  data: {
-    method: string;
-    url: string;
-    params: Array<{ key: string; value: string }>;
-    headers: Array<{ key: string; value: string }>;
-    body: string;
-  };
-  onDataChange: (newData: Partial<RequestResponseProps['data']>) => void;
+  data: RequestData;
+  onDataChange: (newData: Partial<RequestData>) => void;
   activeRequestTab: string;
   activeResponseTab: string;
   onRequestTabChange: (value: string) => void;
@@ -30,42 +42,51 @@ export const RequestResponse = ({
   onResponseTabChange,
 }: RequestResponseProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState<ResponseState>({
+    data: null,
+    type: '',
+    status: 0,
+    duration: 0,
+    size: 0,
+    orginHeaders: '',
+    error: null,
+  });
 
-  const [responseData, setResponseData] = useState<any>(null);
-  const [type, setType] = useState<any>(null);
-  const [status, setStatus] = useState<any>(null);
-  const [duration, setDuration] = useState<any>(null);
-  const [size, setSize] = useState<any>(null);
-  const [orginHeaders, setOrginHeaders] = useState<any>(null);
   const send = async () => {
-    const paramsOptions: any = {
-      method: data.method,
-      url: data.url,
-      headers: data.headers
-        .filter((header) => header.key !== '' || header.value !== '')
-        .reduce((acc: Record<string, string>, header) => {
-          acc[header.key] = header.value;
-          return acc;
-        }, {}),
-    };
+    try {
+      const paramsOptions = {
+        method: data.method,
+        url: data.url,
+        headers: data.headers
+          .filter((header) => header.key && header.value)
+          .reduce((acc: Record<string, string>, header) => {
+            acc[header.key] = header.value;
+            return acc;
+          }, {}),
+      };
 
-    setIsLoading(true);
-    const response = await sendRequest(paramsOptions);
-    const { data: responseData, status, type, duration, size, orginHeaders, error } = response;
-    setIsLoading(false);
-    if (error) {
-      console.log(error);
-      setResponseData(responseData);
-      setStatus(status);
-      return;
+      setIsLoading(true);
+      const result = await sendRequest(paramsOptions);
+
+      setResponse({
+        data: result.data,
+        type: result.type || '',
+        status: Number(result.status) || 0,
+        duration: Number(result.duration) || 0,
+        size: Number(result.size) || 0,
+        orginHeaders: result.orginHeaders ? JSON.parse(result.orginHeaders) : {},
+        error: result.error || null,
+      });
+    } catch (error) {
+      setResponse(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
+      }));
+    } finally {
+      setIsLoading(false);
     }
-    setResponseData(responseData);
-    setType(type);
-    setStatus(status);
-    setDuration(duration);
-    setSize(size);
-    setOrginHeaders(orginHeaders);
   };
+
   return (
     <div className="w-full flex flex-col gap-5">
       <div className="flex flex-row w-full px-4 pt-4">
@@ -76,7 +97,7 @@ export const RequestResponse = ({
           value={data.url}
           onChange={(e) => onDataChange({ url: e.target.value })}
         />
-        <Button className="ml-4" onClick={() => send()}>
+        <Button className="ml-4" onClick={send}>
           Send
         </Button>
       </div>
@@ -92,12 +113,12 @@ export const RequestResponse = ({
       />
       <ResponseTabs
         isLoading={isLoading}
-        type={type}
-        status={status}
-        duration={duration}
-        size={size}
-        responseData={responseData}
-        orginHeaders={orginHeaders}
+        type={response.type}
+        status={response.status}
+        duration={response.duration}
+        size={response.size}
+        responseData={response.data}
+        orginHeaders={response.orginHeaders}
         activeTab={activeResponseTab}
         onTabChange={onResponseTabChange}
       />

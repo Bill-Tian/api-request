@@ -3,6 +3,7 @@
 import * as React from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
+import { html } from '@codemirror/lang-html';
 import { EditorView } from '@codemirror/view';
 
 export const TabBody = ({
@@ -20,34 +21,11 @@ export const TabBody = ({
         value={codeValue}
         height="240px"
         width="900px"
-        extensions={[json(),EditorView.lineWrapping]}
+        extensions={[json(), html(), EditorView.lineWrapping]}
         onChange={(val) => {
           onChange?.(val);
         }}
         editable={editable}
-        basicSetup={{
-          lineNumbers: true,
-          highlightActiveLineGutter: true,
-          highlightSpecialChars: true,
-          foldGutter: true,
-          drawSelection: true,
-          dropCursor: true,
-          allowMultipleSelections: true,
-          indentOnInput: true,
-          syntaxHighlighting: true,
-          bracketMatching: true,
-          closeBrackets: true,
-          autocompletion: true,
-          rectangularSelection: true,
-          crosshairCursor: true,
-          highlightActiveLine: true,
-          highlightSelectionMatches: true,
-          closeBracketsKeymap: true,
-          searchKeymap: true,
-          foldKeymap: true,
-          completionKeymap: true,
-          lintKeymap: true,
-        }}
       />
     </div>
   );

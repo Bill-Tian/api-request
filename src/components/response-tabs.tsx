@@ -35,7 +35,7 @@ export const ResponseTabs = ({
   const [headersList, setHeadersList] = React.useState<ParamType[]>([]);
 
   React.useEffect(() => {
-    const headers = JSON.parse(orginHeaders);
+    const headers = orginHeaders;
     const headersList = headers
       ? Object.entries(headers).map(([key, value]) => ({
           key,
