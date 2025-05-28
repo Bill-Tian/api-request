@@ -1,13 +1,16 @@
 'use client';
 
 import * as React from 'react';
-
-import * as Tabs from '@radix-ui/react-tabs';
 import { ParamType, TabParam } from './tab-param';
 import { TabBody } from './tab-body';
-import { TabsTrigger } from './ui/tabs';
 import { cn } from '@/lib/utils';
 import { DataEmpty } from './data-empty';
+import {
+  OverflowTabs,
+  OverflowTabsList,
+  OverflowTabsTrigger,
+  OverflowTabsContent,
+} from '@/components/ui/overflow-tabs';
 
 interface ResponseTabsProps {
   isLoading: boolean;
@@ -56,7 +59,7 @@ export const ResponseTabs = ({
         </div>
       ) : (
         <div>
-          {status && (
+          {!!status && (
             <div className="flex items-center text-xs font-semibold my-4">
               <div
                 className={cn('inline-flex flex-1 space-x-4', {
@@ -81,15 +84,12 @@ export const ResponseTabs = ({
               </div>
             </div>
           )}
-          <Tabs.Root value={activeTab} onValueChange={onTabChange}>
-            <Tabs.List
-              className="flex shrink-0 border-b border-zinc-200"
-              aria-label="Manage your account"
-            >
-              <TabsTrigger value="tab1">Response Body</TabsTrigger>
-              <TabsTrigger value="tab2">Response Header</TabsTrigger>
-            </Tabs.List>
-            <Tabs.Content className="grow rounded-b-md bg-white py-5 outline-none" value="tab1">
+          <OverflowTabs value={activeTab} onValueChange={onTabChange}>
+            <OverflowTabsList>
+              <OverflowTabsTrigger value="tab1">Response Body</OverflowTabsTrigger>
+              <OverflowTabsTrigger value="tab2">Response Header</OverflowTabsTrigger>
+            </OverflowTabsList>
+            <OverflowTabsContent value="tab1">
               <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
                 {responseData ? (
                   <TabBody editable={false} codeValue={JSON.stringify(responseData, null, 2)} />
@@ -99,8 +99,8 @@ export const ResponseTabs = ({
                   </div>
                 )}
               </div>
-            </Tabs.Content>
-            <Tabs.Content className="grow rounded-b-md bg-white py-2 outline-none" value="tab2">
+            </OverflowTabsContent>
+            <OverflowTabsContent value="tab2">
               <label className="inline-block text-sm font-medium text-gray-500 mb-2">
                 Header List
               </label>
@@ -115,8 +115,8 @@ export const ResponseTabs = ({
                   ))
                 )}
               </div>
-            </Tabs.Content>
-          </Tabs.Root>
+            </OverflowTabsContent>
+          </OverflowTabs>
         </div>
       )}
     </div>

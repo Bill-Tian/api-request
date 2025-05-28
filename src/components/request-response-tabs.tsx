@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { RequestResponse } from './request-response';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { RequestResponse } from '@/components/request-response';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, X, Dot } from 'lucide-react';
 
 interface TabData {
@@ -111,7 +111,7 @@ export function RequestResponseTabs() {
   return (
     <div className="w-full">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="flex items-center bg-[#f9fafb]">
+        <TabsList className="w-full justify-start rounded-none p-0">
           <div className="flex items-center max-w-[850px] overflow-auto custom-scrollbar">
             {tabs.map((tab) => (
               <TabsTrigger
@@ -142,7 +142,7 @@ export function RequestResponseTabs() {
               </TabsTrigger>
             ))}
           </div>
-          <Plus size={16} className="ml-4 cursor-pointer" onClick={addNewTab} />
+          <Plus size={16} className="mx-2 cursor-pointer" onClick={addNewTab} />
         </TabsList>
         {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.id.toString()}>

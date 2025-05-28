@@ -92,7 +92,7 @@ export const RequestResponse = ({
       <div className="flex flex-row w-full px-4 pt-4">
         <RequestSelector value={data.method} onChange={(method) => onDataChange({ method })} />
         <RequestInput
-          className="w-full ml-2 bg-[#f9fafb] rounded-l-none border-0"
+          className="w-full ml-2"
           placeholder="Enter a URL or paste a cURL command"
           value={data.url}
           onChange={(e) => onDataChange({ url: e.target.value })}

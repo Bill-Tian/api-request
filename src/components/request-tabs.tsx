@@ -2,12 +2,16 @@
 
 import * as React from 'react';
 
-import * as Tabs from '@radix-ui/react-tabs';
 import { ParamType, TabParam } from './tab-param';
 import { TabBody } from './tab-body';
 import { Plus } from 'lucide-react';
-import { TabsTrigger } from './ui/tabs';
 import { DataEmpty } from './data-empty';
+import {
+  OverflowTabs,
+  OverflowTabsList,
+  OverflowTabsTrigger,
+  OverflowTabsContent,
+} from '@/components/ui/overflow-tabs';
 
 interface RequestTabsProps {
   params: ParamType[];
@@ -59,23 +63,13 @@ export const RequestTabs = ({
   };
 
   return (
-    <Tabs.Root 
-      className="flex w-[900px] flex-col" 
-      value={activeTab} 
-      onValueChange={onTabChange}
-    >
-      <Tabs.List
-        className="flex shrink-0 border-b border-zinc-200"
-        aria-label="Manage your account"
-      >
-        <TabsTrigger value="tab1">Query Params</TabsTrigger>
-        <TabsTrigger value="tab2">Headers</TabsTrigger>
-        <TabsTrigger value="tab3">Body</TabsTrigger>
-      </Tabs.List>
-      <Tabs.Content
-        className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6]"
-        value="tab1"
-      >
+    <OverflowTabs className="w-[900px]" value={activeTab} onValueChange={onTabChange}>
+      <OverflowTabsList>
+        <OverflowTabsTrigger value="tab1">Query Params</OverflowTabsTrigger>
+        <OverflowTabsTrigger value="tab2">Headers</OverflowTabsTrigger>
+        <OverflowTabsTrigger value="tab3">Body</OverflowTabsTrigger>
+      </OverflowTabsList>
+      <OverflowTabsContent value="tab1">
         <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
           <div className="flex items-center justify-between mb-1">
             <label className="inline-block text-sm font-medium text-gray-500 mb-2">
@@ -102,11 +96,8 @@ export const RequestTabs = ({
             ))
           )}
         </div>
-      </Tabs.Content>
-      <Tabs.Content
-        className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6]"
-        value="tab2"
-      >
+      </OverflowTabsContent>
+      <OverflowTabsContent value="tab2">
         <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
           <div className="flex items-center justify-between mb-1">
             <label className="inline-block text-sm font-medium text-gray-500 mb-2">
@@ -133,13 +124,10 @@ export const RequestTabs = ({
             ))
           )}
         </div>
-      </Tabs.Content>
-      <Tabs.Content
-        className="grow rounded-b-md bg-white py-2 outline-none px-4 border border-[#f3f4f6] overflow-auto custom-scrollbar"
-        value="tab3"
-      >
+      </OverflowTabsContent>
+      <OverflowTabsContent value="tab3">
         <TabBody codeValue={body} onChange={onBodyChange} />
-      </Tabs.Content>
-    </Tabs.Root>
+      </OverflowTabsContent>
+    </OverflowTabs>
   );
 };
