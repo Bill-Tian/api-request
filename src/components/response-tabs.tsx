@@ -51,7 +51,7 @@ export const ResponseTabs = ({
   const isSuccess = 200 <= status && status < 300;
 
   return (
-    <div>
+    <div className="">
       <h3 className="text-xl font-bold">Response</h3>
       {isLoading ? (
         <div className="flex items-center h-[200px] justify-center text-xs font-semibold my-4">
@@ -90,7 +90,7 @@ export const ResponseTabs = ({
               <OverflowTabsTrigger value="tab2">Response Header</OverflowTabsTrigger>
             </OverflowTabsList>
             <OverflowTabsContent value="tab1">
-              <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
+              <div className="flex items-center justify-center min-h-60 max-h-100 overflow-auto custom-scrollbar pr-2">
                 {responseData ? (
                   <TabBody type={type} editable={false} codeValue={JSON.stringify(responseData, null, 2)} />
                 ) : (

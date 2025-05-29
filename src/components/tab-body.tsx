@@ -58,7 +58,6 @@ export const TabBody = ({
     <div>
       <CodeMirror
         value={codeValue}
-        height="240px"
         width="900px"
         extensions={[
           getLanguageExtension(),
