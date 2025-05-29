@@ -70,7 +70,7 @@ export const RequestTabs = ({
         <OverflowTabsTrigger value="tab3">Body</OverflowTabsTrigger>
       </OverflowTabsList>
       <OverflowTabsContent value="tab1">
-        <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
+        <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
           <div className="flex items-center justify-between mb-1">
             <label className="inline-block text-sm font-medium text-gray-500 mb-2">
               Query Parameters
@@ -98,7 +98,7 @@ export const RequestTabs = ({
         </div>
       </OverflowTabsContent>
       <OverflowTabsContent value="tab2">
-        <div className="h-[200px] overflow-auto custom-scrollbar pr-2">
+        <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
           <div className="flex items-center justify-between mb-1">
             <label className="inline-block text-sm font-medium text-gray-500 mb-2">
               Header List

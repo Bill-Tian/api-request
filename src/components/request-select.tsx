@@ -40,7 +40,7 @@ export const RequestSelector = ({ value, onChange }: RequestSelectorProps) => {
       </SelectTrigger>
       <SelectContent>
         {RequestMethod.map((item) => (
-          <SelectItem key={item.value} value={item.value}>
+          <SelectItem key={item.value} value={item.value} className="text-xs">
             {item.label}
           </SelectItem>
         ))}

@@ -109,7 +109,7 @@ export function RequestResponseTabs() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full border border-gray-200 rounded p-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start rounded-none p-0">
           <div className="flex items-center max-w-[850px] overflow-auto custom-scrollbar">

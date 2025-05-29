@@ -5,6 +5,7 @@ import { RequestTabs } from '@/components/request-tabs';
 import { ResponseTabs } from '@/components/response-tabs';
 import { sendRequest } from '@/lib/request';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface RequestData {
   method: string;
@@ -19,7 +20,7 @@ interface ResponseState {
   type: string;
   status: number;
   duration: number;
-  size: number;
+  size: string;
   orginHeaders: string;
   error: string | null;
 }
@@ -47,12 +48,16 @@ export const RequestResponse = ({
     type: '',
     status: 0,
     duration: 0,
-    size: 0,
+    size: '',
     orginHeaders: '',
     error: null,
   });
 
   const send = async () => {
+    if (!data.url) {
+      toast.error('Please enter a URL');
+      return;
+    }
     try {
       const paramsOptions = {
         method: data.method,
@@ -73,12 +78,12 @@ export const RequestResponse = ({
         type: result.type || '',
         status: Number(result.status) || 0,
         duration: Number(result.duration) || 0,
-        size: Number(result.size) || 0,
+        size: result.size || '0',
         orginHeaders: result.orginHeaders ? JSON.parse(result.orginHeaders) : {},
         error: result.error || null,
       });
     } catch (error) {
-      setResponse(prev => ({
+      setResponse((prev) => ({
         ...prev,
         error: error instanceof Error ? error.message : 'An unknown error occurred',
       }));
@@ -89,28 +94,31 @@ export const RequestResponse = ({
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <div className="flex flex-row w-full px-4 pt-4">
-        <RequestSelector value={data.method} onChange={(method) => onDataChange({ method })} />
-        <RequestInput
-          className="w-full ml-2"
-          placeholder="Enter a URL or paste a cURL command"
-          value={data.url}
-          onChange={(e) => onDataChange({ url: e.target.value })}
+      <div>
+        <div className="flex flex-row w-full my-2">
+          <RequestSelector value={data.method} onChange={(method) => onDataChange({ method })} />
+          <RequestInput
+            className="w-full ml-2"
+            placeholder="Enter a URL or paste a cURL command"
+            value={data.url}
+            onChange={(e) => onDataChange({ url: e.target.value })}
+          />
+          <Button className="ml-4" onClick={send}>
+            Send
+          </Button>
+        </div>
+        <RequestTabs
+          params={data.params}
+          headers={data.headers}
+          body={data.body}
+          onParamsChange={(params) => onDataChange({ params })}
+          onHeadersChange={(headers) => onDataChange({ headers })}
+          onBodyChange={(body) => onDataChange({ body })}
+          activeTab={activeRequestTab}
+          onTabChange={onRequestTabChange}
         />
-        <Button className="ml-4" onClick={send}>
-          Send
-        </Button>
       </div>
-      <RequestTabs
-        params={data.params}
-        headers={data.headers}
-        body={data.body}
-        onParamsChange={(params) => onDataChange({ params })}
-        onHeadersChange={(headers) => onDataChange({ headers })}
-        onBodyChange={(body) => onDataChange({ body })}
-        activeTab={activeRequestTab}
-        onTabChange={onRequestTabChange}
-      />
+
       <ResponseTabs
         isLoading={isLoading}
         type={response.type}

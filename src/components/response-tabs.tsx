@@ -17,7 +17,7 @@ interface ResponseTabsProps {
   type: string;
   status: number;
   duration: number;
-  size: number;
+  size: string;
   responseData: any;
   orginHeaders: any;
   activeTab: string;
@@ -92,7 +92,7 @@ export const ResponseTabs = ({
             <OverflowTabsContent value="tab1">
               <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
                 {responseData ? (
-                  <TabBody editable={false} codeValue={JSON.stringify(responseData, null, 2)} />
+                  <TabBody type={type} editable={false} codeValue={JSON.stringify(responseData, null, 2)} />
                 ) : (
                   <div className="flex items-center justify-center h-full">
                     <DataEmpty />
