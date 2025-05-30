@@ -25,8 +25,8 @@ export const sendRequest = async (options: RequestOptions) => {
     data,
     status: response.status,
     type: contentType,
-    duration: response.headers.get('x-response-time'),
-    size: response.headers.get('x-response-size'),
+    duration: Number(response.headers.get('x-response-time')),
+    size: Number(response.headers.get('x-response-size')),
     orginHeaders: response.headers.get('x-response-headers'),
     error: null,
   };

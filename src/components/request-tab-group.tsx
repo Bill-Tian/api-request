@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 
-import { ParamType, TabParam } from './tab-param';
-import { TabBody } from './tab-body';
+import { ParamType, InputParam } from './input-param';
+import { CodeBody } from './code-body';
 import { Plus } from 'lucide-react';
 import { DataEmpty } from './data-empty';
 import {
@@ -63,7 +63,7 @@ export const RequestTabs = ({
   };
 
   return (
-    <OverflowTabs className="w-[900px]" value={activeTab} onValueChange={onTabChange}>
+    <OverflowTabs value={activeTab} onValueChange={onTabChange}>
       <OverflowTabsList>
         <OverflowTabsTrigger value="tab1">Query Params</OverflowTabsTrigger>
         <OverflowTabsTrigger value="tab2">Headers</OverflowTabsTrigger>
@@ -86,7 +86,7 @@ export const RequestTabs = ({
             </div>
           ) : (
             params.map((item, index) => (
-              <TabParam
+              <InputParam
                 key={index}
                 param={item}
                 index={index}
@@ -113,7 +113,7 @@ export const RequestTabs = ({
             </div>
           ) : (
             headers.map((item, index) => (
-              <TabParam
+              <InputParam
                 isHeader={true}
                 key={index}
                 param={item}
@@ -126,7 +126,7 @@ export const RequestTabs = ({
         </div>
       </OverflowTabsContent>
       <OverflowTabsContent value="tab3">
-        <TabBody codeValue={body} onChange={onBodyChange} />
+        <CodeBody codeValue={body} onChange={onBodyChange} />
       </OverflowTabsContent>
     </OverflowTabs>
   );

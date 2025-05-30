@@ -15,3 +15,13 @@ export const bytesToSize = (bytes: number) => {
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
 };
+
+export const msToSecondsOrMinutes = (ms: number) => {
+  if (ms < 1000) {
+    return `${ms} ms`;
+  } else if (ms < 60000) {
+    return `${(ms / 1000).toFixed(2)} s`;
+  } else {
+    return `${(ms / 60000).toFixed(2)} m`;
+  }
+};

@@ -1,4 +1,4 @@
-import { isJson, bytesToSize } from '@/lib/utils';
+import { isJson } from '@/lib/utils';
 
 export const POST = async (req: Request) => {
   try {
@@ -44,7 +44,7 @@ export const POST = async (req: Request) => {
       headers: {
         'content-type': contentType,
         'x-response-time': `${duration}`,
-        'x-response-size': bytesToSize(size),
+        'x-response-size': `${size}`,
         'x-response-headers': JSON.stringify(headersObj),
       },
     });

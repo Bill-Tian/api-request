@@ -8,7 +8,7 @@ import { EditorView } from '@codemirror/view';
 import { foldGutter } from '@codemirror/language';
 import { vscodeLight } from '@uiw/codemirror-theme-vscode';
 
-export const TabBody = ({
+export const CodeBody = ({
   editable = true,
   codeValue,
   onChange,
@@ -58,7 +58,6 @@ export const TabBody = ({
     <div>
       <CodeMirror
         value={codeValue}
-        width="900px"
         extensions={[
           getLanguageExtension(),
           EditorView.lineWrapping,

@@ -13,7 +13,7 @@ export interface ParamType {
   value: string;
 }
 
-export const TabParam = ({
+export const InputParam = ({
   isHeader = false,
   param,
   index,
