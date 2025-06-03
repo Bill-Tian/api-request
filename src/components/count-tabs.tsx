@@ -4,6 +4,8 @@ import { Request } from '@/components/request';
 import { Response } from '@/components/response';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, X, Dot } from 'lucide-react';
+import { MethodColorMap } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 // 常量定义
 const STORAGE_KEYS = {
@@ -148,9 +150,10 @@ export function CountTabs() {
     <TabsTrigger
       key={tab.id}
       value={tab.id.toString()}
-      className="group relative h-auto w-35 bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-4 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-card"
+      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-card"
     >
-      <div className="flex items-center w-25 h-6 leading-6 px-2">
+      <div className="flex items-center h-6 leading-6 px-2">
+        <div className={cn('text-xs font-medium mr-1', MethodColorMap[tab.requestData.method as keyof typeof MethodColorMap])}>{tab.requestData.method}</div>
         <div className="truncate w-20">{tab.title}</div>
         <div className="flex items-center absolute right-2 top-3">
           {tabs.length > 1 ? (

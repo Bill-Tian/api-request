@@ -6,9 +6,9 @@ export const RequestMethod = [
 ]
 
 export const MethodColorMap = {
-  GET: 'text-blue-500',
-  POST: 'text-green-500',
-  PUT: 'text-yellow-500',
+  GET: 'text-green-500',
+  POST: 'text-yellow-500',
+  PUT: 'text-blue-500',
   DELETE: 'text-red-500',
 }
 
