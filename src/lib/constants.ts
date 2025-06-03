@@ -5,6 +5,13 @@ export const RequestMethod = [
   {label: 'DELETE', value: 'DELETE'},
 ]
 
+export const MethodColorMap = {
+  GET: 'text-blue-500',
+  POST: 'text-green-500',
+  PUT: 'text-yellow-500',
+  DELETE: 'text-red-500',
+}
+
 export const RequestHeader = [
   {label: 'Accept', value: 'Accept'},
   {label: 'Accept-Charset', value: 'Accept-Charset'},

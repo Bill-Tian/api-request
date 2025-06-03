@@ -49,11 +49,11 @@ export const ResponseTabGroup = ({
         <CodeBody
           type={response?.type}
           editable={false}
-          codeValue={JSON.stringify(response?.data, null, 2)}
+          codeValue={response?.data ? JSON.stringify(response?.data, null, 2) : ''}
+          minHeight="100px"
         />
       </OverflowTabsContent>
       <OverflowTabsContent value="tab2">
-        <label className="inline-block text-sm font-medium text-gray-500 mb-2">Header List</label>
         <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
           {headersList.length === 0 ? (
             <div className="flex items-center justify-center h-full">

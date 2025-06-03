@@ -1,4 +1,4 @@
-import { RequestTabs } from '@/components/request-tab-group';
+import { RequestTabGroup } from '@/components/request-tab-group';
 import { sendRequest } from '@/lib/request';
 import { toast } from 'sonner';
 import { UrlEditor } from '@/components/url-editor';
@@ -13,6 +13,7 @@ interface RequestResponseProps {
   onResponseTabChange: (value: string) => void;
   setLoading: (value: boolean) => void;
   setResponse: (value: ResponseState) => void;
+  loading: boolean;
 }
 
 export const Request = ({
@@ -22,6 +23,7 @@ export const Request = ({
   onRequestTabChange,
   setLoading,
   setResponse,
+  loading,
 }: RequestResponseProps) => {
   const send = async () => {
     if (!data.url) {
@@ -62,8 +64,8 @@ export const Request = ({
   return (
     <div className="w-full flex flex-col gap-5">
       <div>
-        <UrlEditor data={data} onDataChange={onDataChange} onSend={send} />
-        <RequestTabs
+        <UrlEditor data={data} loading={loading} onDataChange={onDataChange} onSend={send} />
+        <RequestTabGroup
           params={data.params}
           headers={data.headers}
           body={data.body}

@@ -1,5 +1,5 @@
 'use client';
-import { RequestMethod } from '@/lib/constants';
+import { MethodColorMap, RequestMethod } from '@/lib/constants';
 import {
   Select,
   SelectContent,
@@ -10,15 +10,23 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RequestData } from '@/components/count-tabs';
+import { cn } from '@/lib/utils';
 
 interface UrlEditorProps {
   data: RequestData;
+  loading: boolean;
   onDataChange: (newData: Partial<RequestData>) => void;
   onSend: () => void;
 }
-export const UrlEditor = ({ data, onDataChange, onSend }: UrlEditorProps) => {
+export const UrlEditor = ({ data, loading, onDataChange, onSend }: UrlEditorProps) => {
   return (
-    <div className="flex flex-row w-full my-2">
+    <form 
+      className="flex flex-row w-full my-2"
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSend();
+      }}
+    >
       <Select
         value={data.method}
         defaultValue={data.method}
@@ -29,7 +37,7 @@ export const UrlEditor = ({ data, onDataChange, onSend }: UrlEditorProps) => {
         </SelectTrigger>
         <SelectContent>
           {RequestMethod.map((item) => (
-            <SelectItem key={item.value} value={item.value} className="text-xs">
+            <SelectItem key={item.value} value={item.value} className={cn("text-sm font-medium focus:text-none", MethodColorMap[item.value as keyof typeof MethodColorMap])}>
               {item.label}
             </SelectItem>
           ))}
@@ -42,9 +50,9 @@ export const UrlEditor = ({ data, onDataChange, onSend }: UrlEditorProps) => {
         value={data.url}
         onChange={(e) => onDataChange({ url: e.target.value })}
       />
-      <Button className="ml-4" onClick={onSend}>
+      <Button className="ml-4 cursor-pointer" type="submit" disabled={loading} >
         Send
       </Button>
-    </div>
+    </form>
   );
 };

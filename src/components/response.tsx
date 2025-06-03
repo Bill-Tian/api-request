@@ -36,16 +36,16 @@ export const Response = ({
           })}
         >
           <span>
-            <span className="text-gray-800">Status: </span> {status}&nbsp; • &nbsp;
+            <span className="text-primary">Status: </span> {status}&nbsp; • &nbsp;
             {status >= 200 && status < 300 ? 'OK' : 'Error'}
           </span>
           {status >= 200 && status < 300 && (
             <>
               <span>
-                <span className="text-gray-800">Time: </span> {time}
+                <span className="text-primary">Time: </span> {time}
               </span>
               <span>
-                <span className="text-gray-800">Size: </span> {size}
+                <span className="text-primary">Size: </span> {size}
               </span>
             </>
           )}

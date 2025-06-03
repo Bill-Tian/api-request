@@ -24,7 +24,7 @@ interface RequestTabsProps {
   onTabChange: (value: string) => void;
 }
 
-export const RequestTabs = ({
+export const RequestTabGroup = ({
   params,
   headers,
   body,
@@ -126,7 +126,7 @@ export const RequestTabs = ({
         </div>
       </OverflowTabsContent>
       <OverflowTabsContent value="tab3">
-        <CodeBody codeValue={body} onChange={onBodyChange} />
+        <CodeBody codeValue={body} onChange={onBodyChange} height="240px" />
       </OverflowTabsContent>
     </OverflowTabs>
   );

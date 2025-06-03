@@ -148,7 +148,7 @@ export function CountTabs() {
     <TabsTrigger
       key={tab.id}
       value={tab.id.toString()}
-      className="group relative h-auto w-35 bg-transparent mr-0 data-[state=active]:bg-[#fff] px-4 py-2 border-r border-r-[#f3f4f6] rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-[#f3f4f6]"
+      className="group relative h-auto w-35 bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-4 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-card"
     >
       <div className="flex items-center w-25 h-6 leading-6 px-2">
         <div className="truncate w-20">{tab.title}</div>
@@ -184,6 +184,7 @@ export function CountTabs() {
         onResponseTabChange={(value) => updateActiveResponseTab(tab.id, value)}
         setLoading={setLoading}
         setResponse={setResponse}
+        loading={loading}
       />
       <Response
         loading={loading}
@@ -195,7 +196,7 @@ export function CountTabs() {
   ), [loading, response, updateTabData, updateActiveRequestTab, updateActiveResponseTab]);
 
   return (
-    <div className="max-w-6xl mx-auto border border-gray-200 rounded p-4">
+    <div className="max-w-6xl mx-auto my-2 border border-border rounded p-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start rounded-none p-0">
           <div className="flex items-center max-w-[850px] overflow-auto custom-scrollbar">

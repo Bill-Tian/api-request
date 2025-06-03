@@ -69,11 +69,11 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         className="rounded-none"
       />
       {isOpen && filteredOptions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-10 w-full mt-1 bg-background border border-border shadow-lg max-h-60 overflow-auto">
           {filteredOptions.map((option, index) => (
             <div
               key={index}
-              className="px-4 py-2 text-sm cursor-pointer hover:bg-gray-100"
+              className="px-4 py-2 text-sm cursor-pointer hover:bg-input"
               onClick={() => handleOptionClick(option)}
             >
               {option}

@@ -6,19 +6,25 @@ import { json } from '@codemirror/lang-json';
 import { html } from '@codemirror/lang-html';
 import { EditorView } from '@codemirror/view';
 import { foldGutter } from '@codemirror/language';
-import { vscodeLight } from '@uiw/codemirror-theme-vscode';
+import { vscodeLight, vscodeDark } from '@uiw/codemirror-theme-vscode';
+import { useTheme } from 'next-themes';
 
 export const CodeBody = ({
   editable = true,
   codeValue,
   onChange,
   type = '',
+  height = '100%',
+  minHeight = '100%',
 }: {
-  editable?: boolean;
+  editable?: boolean; 
   codeValue: string;
   onChange?: (val: string) => void;
   type?: string;
+  height?: string;
+  minHeight?: string;
 }) => {
+  const { theme } = useTheme();
   const editorTheme = EditorView.theme({
     '.cm-gutters': {
       fontFamily: 'var(--font-roboto-mono)',
@@ -58,6 +64,8 @@ export const CodeBody = ({
     <div>
       <CodeMirror
         value={codeValue}
+        height={height}
+        minHeight={minHeight}
         extensions={[
           getLanguageExtension(),
           EditorView.lineWrapping,
@@ -69,8 +77,10 @@ export const CodeBody = ({
         ]}
         basicSetup={{
           foldGutter: false,
+          highlightActiveLine: !!codeValue,
+          highlightActiveLineGutter: !!codeValue,
         }}
-        theme={vscodeLight}
+        theme={theme === 'dark' ? vscodeDark : vscodeLight}
         onChange={(val) => {
           onChange?.(val);
         }}
