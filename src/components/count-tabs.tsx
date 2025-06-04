@@ -9,16 +9,19 @@ import { cn } from '@/lib/utils';
 import { TabData, RequestData, ResponseData } from '@/types/tabs';
 import { getStoredData, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 import { v4 as uuidv4 } from 'uuid';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 // 默认标签页数据
 const DEFAULT_TAB_ID = '1'; // 服务器端渲染时使用固定值
 const DEFAULT_TAB: TabData = {
   id: DEFAULT_TAB_ID,
-  title: `Request ${DEFAULT_TAB_ID}`,
+  title: `Untitled`,
   requestData: {
     method: 'GET',
     url: '',
     params: [{ key: '', value: '' }],
-    headers: [{ key: 'content-Type', value: 'application/json' }],
+    headers: [{ key: 'Content-Type', value: 'application/json' }],
     body: '',
   },
   activeRequestTab: 'tab1',
@@ -39,6 +42,8 @@ export function CountTabs() {
   const [mounted, setMounted] = useState(false);
   const [tabs, setTabs] = useState<TabData[]>([DEFAULT_TAB]);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB_ID);
+  const [editingTab, setEditingTab] = useState<TabData | null>(null);
+  const [newTitle, setNewTitle] = useState('');
 
   // 在客户端挂载后从 sessionStorage 加载数据
   useEffect(() => {
@@ -68,7 +73,7 @@ export function CountTabs() {
     setTabs(prev => [...prev, {
       ...DEFAULT_TAB,
       id: newId,
-      title: `Request ${newId.slice(-3)}`, // 使用 UUID 的后3位作为显示
+      title: `Untitled`, // 使用 UUID 的后3位作为显示
     }]);
     setActiveTab(newId);
   };
@@ -110,12 +115,27 @@ export function CountTabs() {
     ));
   };
 
+  const handleTitleEdit = (tab: TabData) => {
+    setEditingTab(tab);
+    setNewTitle(tab.title);
+  };
+
+  const handleTitleSave = () => {
+    if (editingTab) {
+      setTabs(prev => prev.map(tab =>
+        tab.id === editingTab.id ? { ...tab, title: newTitle } : tab
+      ));
+      setEditingTab(null);
+    }
+  };
+
   // 渲染辅助函数
   const renderTabTrigger = (tab: TabData) => (
     <TabsTrigger
       key={tab.id}
-      value={tab.id.toString()}
-      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-card"
+      value={tab.id}
+      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-primary/10"
+      onDoubleClick={() => handleTitleEdit(tab)}
     >
       <div className="flex items-center h-6 leading-6 px-2">
         <div className={cn('text-xs font-medium mr-1', MethodColorMap[tab.requestData.method as keyof typeof MethodColorMap])}>
@@ -144,7 +164,7 @@ export function CountTabs() {
   );
 
   const renderTabContent = (tab: TabData) => (
-    <TabsContent key={tab.id} value={tab.id.toString()}>
+    <TabsContent key={tab.id} value={tab.id}>
       <Request
         data={tab.requestData}
         onDataChange={(newData) => updateTabData(tab.id, newData)}
@@ -169,13 +189,33 @@ export function CountTabs() {
     <div className="max-w-6xl mx-auto my-2 border border-border rounded p-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full h-auto justify-start rounded-none p-0">
-          <div className="flex items-center max-w-[850px] overflow-auto custom-scrollbar">
+          <div className="flex items-center overflow-auto custom-scrollbar">
             {tabs.map(renderTabTrigger)}
           </div>
-          <Plus size={16} className="mx-2 cursor-pointer" onClick={addNewTab} />
+          <Plus size={16} className="mx-4 cursor-pointer" onClick={addNewTab} />
         </TabsList>
         {tabs.map(renderTabContent)}
       </Tabs>
+
+      <Dialog open={!!editingTab} onOpenChange={() => setEditingTab(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Request Title</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Enter new title"
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingTab(null)}>Cancel</Button>
+            <Button onClick={handleTitleSave}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

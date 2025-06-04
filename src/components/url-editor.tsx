@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RequestData } from '@/types/tabs';
 import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Send } from 'lucide-react';
 
 interface UrlEditorProps {
   data: RequestData;
@@ -21,7 +21,7 @@ interface UrlEditorProps {
 }
 export const UrlEditor = ({ data, loading, onDataChange, onSend }: UrlEditorProps) => {
   return (
-    <form 
+    <form
       className="flex flex-row w-full my-2"
       onSubmit={(e) => {
         e.preventDefault();
@@ -38,7 +38,14 @@ export const UrlEditor = ({ data, loading, onDataChange, onSend }: UrlEditorProp
         </SelectTrigger>
         <SelectContent>
           {RequestMethod.map((item) => (
-            <SelectItem key={item.value} value={item.value} className={cn("text-sm font-medium focus:text-none", MethodColorMap[item.value as keyof typeof MethodColorMap])}>
+            <SelectItem
+              key={item.value}
+              value={item.value}
+              className={cn(
+                'text-sm font-medium focus:text-none',
+                MethodColorMap[item.value as keyof typeof MethodColorMap],
+              )}
+            >
               {item.label}
             </SelectItem>
           ))}
@@ -53,13 +60,11 @@ export const UrlEditor = ({ data, loading, onDataChange, onSend }: UrlEditorProp
       />
       <Button className="ml-4 cursor-pointer" type="submit" disabled={loading}>
         {loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Sending...
-          </>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          'Send'
+          <Send className="mr-2 h-4 w-4" />
         )}
+        Send
       </Button>
     </form>
   );
