@@ -9,8 +9,9 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { RequestData } from '@/components/count-tabs';
+import { RequestData } from '@/types/tabs';
 import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
 interface UrlEditorProps {
   data: RequestData;
@@ -50,8 +51,15 @@ export const UrlEditor = ({ data, loading, onDataChange, onSend }: UrlEditorProp
         value={data.url}
         onChange={(e) => onDataChange({ url: e.target.value })}
       />
-      <Button className="ml-4 cursor-pointer" type="submit" disabled={loading} >
-        Send
+      <Button className="ml-4 cursor-pointer" type="submit" disabled={loading}>
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Sending...
+          </>
+        ) : (
+          'Send'
+        )}
       </Button>
     </form>
   );

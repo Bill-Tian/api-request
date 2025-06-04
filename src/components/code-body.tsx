@@ -16,6 +16,7 @@ export const CodeBody = ({
   type = '',
   height = '100%',
   minHeight = '100%',
+  maxHeight = '100%',
 }: {
   editable?: boolean; 
   codeValue: string;
@@ -23,6 +24,7 @@ export const CodeBody = ({
   type?: string;
   height?: string;
   minHeight?: string;
+  maxHeight?: string;
 }) => {
   const { theme } = useTheme();
   const editorTheme = EditorView.theme({
@@ -66,6 +68,7 @@ export const CodeBody = ({
         value={codeValue}
         height={height}
         minHeight={minHeight}
+        maxHeight={maxHeight}
         extensions={[
           getLanguageExtension(),
           EditorView.lineWrapping,

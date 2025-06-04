@@ -10,11 +10,11 @@ import {
   OverflowTabsTrigger,
   OverflowTabsContent,
 } from '@/components/ui/overflow-tabs';
-import { ResponseState } from '@/components/count-tabs';
+import { ResponseData } from '@/types/tabs';
 
 interface ResponseTabsProps {
   loading: boolean;
-  response: ResponseState | null;
+  response: ResponseData | null;
   activeTab: string;
   onTabChange: (value: string) => void;
 }
@@ -51,6 +51,7 @@ export const ResponseTabGroup = ({
           editable={false}
           codeValue={response?.data ? JSON.stringify(response?.data, null, 2) : ''}
           minHeight="100px"
+          maxHeight="400px"
         />
       </OverflowTabsContent>
       <OverflowTabsContent value="tab2">

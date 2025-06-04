@@ -17,9 +17,9 @@ export const sendRequest = async (options: RequestOptions) => {
     },
   });
   const contentType = response.headers.get('content-type') || '';
-  if (!response.ok) {
-    return { data: null, status: response.status, error: 'Failed to fetch' };
-  }
+  // if (!response.ok) {
+  //   return { data: null, status: response.status, error: 'Failed to fetch' };
+  // }
   const data = isJson(contentType) ? await response.json() : await response.text();
   return {
     data,

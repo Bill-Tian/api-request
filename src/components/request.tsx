@@ -2,7 +2,7 @@ import { RequestTabGroup } from '@/components/request-tab-group';
 import { sendRequest } from '@/lib/request';
 import { toast } from 'sonner';
 import { UrlEditor } from '@/components/url-editor';
-import { RequestData, ResponseState } from '@/components/count-tabs';
+import { RequestData, ResponseData } from '@/types/tabs';
 
 interface RequestResponseProps {
   data: RequestData;
@@ -12,7 +12,7 @@ interface RequestResponseProps {
   onRequestTabChange: (value: string) => void;
   onResponseTabChange: (value: string) => void;
   setLoading: (value: boolean) => void;
-  setResponse: (value: ResponseState) => void;
+  setResponse: (value: ResponseData) => void;
   loading: boolean;
 }
 
@@ -37,9 +37,19 @@ export const Request = ({
         return acc;
       }, {});
 
+      const paramsList = data.params.filter((param) => param.key && param.value);
+      let paramsUrl = '';
+      if (paramsList.length > 0) {
+        const params = new URLSearchParams();
+        paramsList.forEach((param) => {
+          params.append(param.key, param.value);
+        });
+        paramsUrl = `${data.url}?${params.toString()}`;
+      }
+
       const paramsOptions = {
         method: data.method,
-        url: data.url,
+        url: paramsUrl || data.url,
         headers,
       };
 

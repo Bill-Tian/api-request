@@ -1,21 +1,19 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Request } from '@/components/request';
 import { Response } from '@/components/response';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, X, Dot } from 'lucide-react';
 import { MethodColorMap } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-
-// 常量定义
-const STORAGE_KEYS = {
-  TABS: 'requestTabs',
-  ACTIVE_TAB: 'activeTab',
-} as const;
-
+import { TabData, RequestData, ResponseData } from '@/types/tabs';
+import { getStoredData, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { v4 as uuidv4 } from 'uuid';
+// 默认标签页数据
+const DEFAULT_TAB_ID = '1'; // 服务器端渲染时使用固定值
 const DEFAULT_TAB: TabData = {
-  id: 1,
-  title: 'Request 1',
+  id: DEFAULT_TAB_ID,
+  title: `Request ${DEFAULT_TAB_ID}`,
   requestData: {
     method: 'GET',
     url: '',
@@ -25,67 +23,28 @@ const DEFAULT_TAB: TabData = {
   },
   activeRequestTab: 'tab1',
   activeResponseTab: 'tab1',
-};
-
-// 类型定义
-export interface RequestData {
-  method: string;
-  url: string;
-  params: Array<{ key: string; value: string }>;
-  headers: Array<{ key: string; value: string }>;
-  body: string;
-}
-
-export interface ResponseState {
-  data: any;
-  type: string;
-  status: number;
-  duration: number;
-  size: number;
-  orginHeaders: string;
-  error: string | null;
-}
-
-interface TabData {
-  id: number;
-  title: string;
-  requestData: RequestData;
-  activeRequestTab: string;
-  activeResponseTab: string;
-}
-
-// 工具函数
-const getStoredData = <T,>(key: string, defaultValue: T): T => {
-  try {
-    const saved = sessionStorage.getItem(key);
-    return saved ? JSON.parse(saved) : defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
-const saveToStorage = (key: string, value: any): void => {
-  try {
-    sessionStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.error('Failed to save to sessionStorage:', error);
-  }
+  responseData: {
+    data: null,
+    type: '',
+    status: 0,
+    duration: 0,
+    size: 0,
+    orginHeaders: '',
+    error: null,
+  },
 };
 
 export function CountTabs() {
-  // 状态管理
-  const [response, setResponse] = useState<ResponseState | null>(null);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  
   const [tabs, setTabs] = useState<TabData[]>([DEFAULT_TAB]);
-  const [activeTab, setActiveTab] = useState('1');
+  const [activeTab, setActiveTab] = useState(DEFAULT_TAB_ID);
 
   // 在客户端挂载后从 sessionStorage 加载数据
   useEffect(() => {
     setMounted(true);
     const savedTabs = getStoredData(STORAGE_KEYS.TABS, [DEFAULT_TAB]);
-    const savedActiveTab = getStoredData(STORAGE_KEYS.ACTIVE_TAB, '1');
+    const savedActiveTab = getStoredData(STORAGE_KEYS.ACTIVE_TAB, DEFAULT_TAB_ID);
     setTabs(savedTabs);
     setActiveTab(savedActiveTab);
   }, []);
@@ -104,57 +63,65 @@ export function CountTabs() {
   }, [activeTab, mounted]);
 
   // 事件处理函数
-  const addNewTab = useCallback(() => {
-    const newId = tabs.length + 1;
+  const addNewTab = () => {
+    const newId = uuidv4(); // 使用 UUID 生成唯一 ID
     setTabs(prev => [...prev, {
       ...DEFAULT_TAB,
       id: newId,
-      title: `Request ${newId}`,
+      title: `Request ${newId.slice(-3)}`, // 使用 UUID 的后3位作为显示
     }]);
-    setActiveTab(newId.toString());
-  }, [tabs.length]);
+    setActiveTab(newId);
+  };
 
-  const removeTab = useCallback((id: number) => {
+  const removeTab = (id: string) => {
     if (tabs.length === 1) return;
     setTabs(prev => {
       const newTabs = prev.filter(tab => tab.id !== id);
-      if (activeTab === id.toString()) {
-        setActiveTab(newTabs[newTabs.length - 1].id.toString());
+      if (activeTab === id) {
+        setActiveTab(newTabs[newTabs.length - 1].id);
       }
       return newTabs;
     });
-  }, [tabs.length, activeTab]);
+  };
 
-  const updateTabData = useCallback((id: number, newData: Partial<RequestData>) => {
+  const updateTabData = (id: string, newData: Partial<RequestData>) => {
     setTabs(prev => prev.map(tab =>
       tab.id === id
         ? { ...tab, requestData: { ...tab.requestData, ...newData } }
         : tab
     ));
-  }, []);
+  };
 
-  const updateActiveRequestTab = useCallback((id: number, value: string) => {
+  const updateActiveRequestTab = (id: string, value: string) => {
     setTabs(prev => prev.map(tab =>
       tab.id === id ? { ...tab, activeRequestTab: value } : tab
     ));
-  }, []);
+  };
 
-  const updateActiveResponseTab = useCallback((id: number, value: string) => {
+  const updateActiveResponseTab = (id: string, value: string) => {
     setTabs(prev => prev.map(tab =>
       tab.id === id ? { ...tab, activeResponseTab: value } : tab
     ));
-  }, []);
+  };
+
+  const setResponseData = (id: string, value: ResponseData) => {
+    setTabs(prev => prev.map(tab =>
+      tab.id === id ? { ...tab, responseData: value } : tab
+    ));
+  };
 
   // 渲染辅助函数
-  const renderTabTrigger = useCallback((tab: TabData) => (
+  const renderTabTrigger = (tab: TabData) => (
     <TabsTrigger
       key={tab.id}
       value={tab.id.toString()}
       className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-card"
     >
       <div className="flex items-center h-6 leading-6 px-2">
-        <div className={cn('text-xs font-medium mr-1', MethodColorMap[tab.requestData.method as keyof typeof MethodColorMap])}>{tab.requestData.method}</div>
-        <div className="truncate w-20">{tab.title}</div>
+        <div className={cn('text-xs font-medium mr-1', MethodColorMap[tab.requestData.method as keyof typeof MethodColorMap])}>
+          {tab.requestData.method}
+        </div>
+        <div className="truncate w-20 text-[13px]">{tab.title}</div>
         <div className="flex items-center absolute right-2 top-3">
           {tabs.length > 1 ? (
             <div
@@ -174,9 +141,9 @@ export function CountTabs() {
         </div>
       </div>
     </TabsTrigger>
-  ), [tabs.length, removeTab]);
+  );
 
-  const renderTabContent = useCallback((tab: TabData) => (
+  const renderTabContent = (tab: TabData) => (
     <TabsContent key={tab.id} value={tab.id.toString()}>
       <Request
         data={tab.requestData}
@@ -186,22 +153,22 @@ export function CountTabs() {
         onRequestTabChange={(value) => updateActiveRequestTab(tab.id, value)}
         onResponseTabChange={(value) => updateActiveResponseTab(tab.id, value)}
         setLoading={setLoading}
-        setResponse={setResponse}
+        setResponse={(value) => setResponseData(tab.id, value)}
         loading={loading}
       />
       <Response
         loading={loading}
-        response={response}
+        response={tab.responseData}
         activeResponseTab={tab.activeResponseTab}
         onResponseTabChange={(value) => updateActiveResponseTab(tab.id, value)}
       />
     </TabsContent>
-  ), [loading, response, updateTabData, updateActiveRequestTab, updateActiveResponseTab]);
+  );
 
   return (
     <div className="max-w-6xl mx-auto my-2 border border-border rounded p-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="w-full justify-start rounded-none p-0">
+        <TabsList className="w-full h-auto justify-start rounded-none p-0">
           <div className="flex items-center max-w-[850px] overflow-auto custom-scrollbar">
             {tabs.map(renderTabTrigger)}
           </div>

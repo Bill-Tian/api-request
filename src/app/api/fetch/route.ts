@@ -15,11 +15,11 @@ export const POST = async (req: Request) => {
     const endTime = new Date();
     const duration = endTime.getTime() - startTime.getTime();
 
-    if (!response.ok) {
-      return new Response(JSON.stringify({ error: 'Failed to fetch' }), {
-        status: response.status,
-      });
-    }
+    // if (!response.ok) {
+    //   return new Response(JSON.stringify({ error: 'Failed to fetch' }), {
+    //     status: response.status,
+    //   });
+    // }
 
     const contentType = response.headers.get('content-type') || '';
     const contentLength = response.headers.get('content-length');

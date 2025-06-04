@@ -1,10 +1,10 @@
 import { ResponseTabGroup } from '@/components/response-tab-group';
 import { bytesToSize, cn, msToSecondsOrMinutes } from '@/lib/utils';
-import { ResponseState } from '@/components/count-tabs';
+import { ResponseData } from '@/types/tabs';
 
 interface ResponseProps {
   loading: boolean;
-  response: ResponseState | null;
+  response: ResponseData | null;
   activeResponseTab: string;
   onResponseTabChange: (value: string) => void;
 }
@@ -39,16 +39,14 @@ export const Response = ({
             <span className="text-primary">Status: </span> {status}&nbsp; • &nbsp;
             {status >= 200 && status < 300 ? 'OK' : 'Error'}
           </span>
-          {status >= 200 && status < 300 && (
-            <>
-              <span>
-                <span className="text-primary">Time: </span> {time}
-              </span>
-              <span>
-                <span className="text-primary">Size: </span> {size}
-              </span>
-            </>
-          )}
+          <>
+            <span>
+              <span className="text-primary">Time: </span> {time}
+            </span>
+            <span>
+              <span className="text-primary">Size: </span> {size}
+            </span>
+          </>
         </div>
       </div>
     );
@@ -57,13 +55,20 @@ export const Response = ({
   return (
     <div>
       <h3 className="text-xl font-bold">Response</h3>
-      {response ? <RenderedResponseMeta /> : null}
-      <ResponseTabGroup
-        loading={loading}
-        response={response}
-        activeTab={activeResponseTab}
-        onTabChange={onResponseTabChange}
-      />
+      {response?.status ? <RenderedResponseMeta /> : null}
+      <div className="relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm z-10 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
+        )}
+        <ResponseTabGroup
+          loading={loading}
+          response={response}
+          activeTab={activeResponseTab}
+          onTabChange={onResponseTabChange}
+        />
+      </div>
     </div>
   );
 };
