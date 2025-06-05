@@ -28,7 +28,7 @@ export const Request = ({
   const send = async () => {
     if (!data.url) {
       toast.warning('Please enter a URL', {
-        position: 'bottom-center',
+        position: 'top-center',
       });
       return;
     }

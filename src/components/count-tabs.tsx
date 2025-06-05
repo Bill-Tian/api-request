@@ -136,7 +136,7 @@ export function CountTabs() {
     <TabsTrigger
       key={tab.id}
       value={tab.id}
-      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-r-[0px] border-l border-l-solid border-l-border/60 cursor-pointer text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1.5px_0_0_var(--primary),0_-1.5px_0_0_var(--primary)] hover:bg-primary/10"
+      className="group relative h-auto min-w-42 flex-shrink-0 justify-start bg-transparent mr-0 border-r-[0px] border-l border-l-solid border-l-border/60 last:border-r last:border-r-solid last:border-r-border/60 cursor-pointer text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_2px_0_0_var(--primary),0_-2px_0_0_var(--primary)] hover:bg-primary/10"
       onDoubleClick={() => handleTitleEdit(tab)}
     >
       <div className="flex items-center h-6 leading-6 px-2">
@@ -148,14 +148,14 @@ export function CountTabs() {
         >
           {tab.requestData.method}
         </div>
-        {/* <Tooltip>
-          <TooltipTrigger className="cursor-pointer">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="cursor-pointer truncate w-20 text-[13px]">{tab.title}</div>
           </TooltipTrigger>
           <TooltipContent>
             <p>{tab.title}</p>
           </TooltipContent>
-        </Tooltip> */}
-        <div className="truncate w-20 text-[13px]">{tab.title}</div>
+        </Tooltip>
 
         <div className="flex items-center absolute right-2 top-3">
           {tabs.length > 1 ? (
@@ -204,7 +204,7 @@ export function CountTabs() {
     <div className="max-w-6xl mx-auto my-2 border border-border rounded p-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full h-auto justify-start rounded-none p-0">
-          <div className="flex items-center overflow-auto custom-scrollbar">
+          <div className="flex items-center overflow-x-auto custom-scrollbar">
             {tabs.map(renderTabTrigger)}
           </div>
           <Plus size={16} className="mx-4 cursor-pointer" onClick={addNewTab} />
