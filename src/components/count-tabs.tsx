@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 // 默认标签页数据
@@ -135,7 +136,7 @@ export function CountTabs() {
     <TabsTrigger
       key={tab.id}
       value={tab.id}
-      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0_var(--primary),0_-1px_0_0_var(--primary)] hover:bg-primary/10"
+      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-r-[0px] border-l border-l-solid border-l-border/60 cursor-pointer text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1.5px_0_0_var(--primary),0_-1.5px_0_0_var(--primary)] hover:bg-primary/10"
       onDoubleClick={() => handleTitleEdit(tab)}
     >
       <div className="flex items-center h-6 leading-6 px-2">
@@ -147,7 +148,15 @@ export function CountTabs() {
         >
           {tab.requestData.method}
         </div>
+        {/* <Tooltip>
+          <TooltipTrigger className="cursor-pointer">
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{tab.title}</p>
+          </TooltipContent>
+        </Tooltip> */}
         <div className="truncate w-20 text-[13px]">{tab.title}</div>
+
         <div className="flex items-center absolute right-2 top-3">
           {tabs.length > 1 ? (
             <div

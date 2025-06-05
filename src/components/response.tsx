@@ -58,7 +58,7 @@ export const Response = ({
       {response?.status ? <RenderedResponseMeta /> : null}
       <div className="relative">
         {loading && (
-          <div className="absolute inset-0 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm z-10 flex items-center justify-center">
+          <div className="absolute inset-0 opacity-40 bg-white dark:bg-gray-900 backdrop-blur-sm z-10 flex items-center justify-center">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
           </div>
         )}
