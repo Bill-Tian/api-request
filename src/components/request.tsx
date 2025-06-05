@@ -27,7 +27,9 @@ export const Request = ({
 }: RequestResponseProps) => {
   const send = async () => {
     if (!data.url) {
-      toast.error('Please enter a URL');
+      toast.warning('Please enter a URL', {
+        position: 'bottom-center',
+      });
       return;
     }
     try {

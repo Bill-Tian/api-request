@@ -9,7 +9,13 @@ import { cn } from '@/lib/utils';
 import { TabData, RequestData, ResponseData } from '@/types/tabs';
 import { getStoredData, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 import { v4 as uuidv4 } from 'uuid';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 // 默认标签页数据
@@ -39,7 +45,6 @@ const DEFAULT_TAB: TabData = {
 
 export function CountTabs() {
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [tabs, setTabs] = useState<TabData[]>([DEFAULT_TAB]);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB_ID);
   const [editingTab, setEditingTab] = useState<TabData | null>(null);
@@ -47,7 +52,6 @@ export function CountTabs() {
 
   // 在客户端挂载后从 sessionStorage 加载数据
   useEffect(() => {
-    setMounted(true);
     const savedTabs = getStoredData(STORAGE_KEYS.TABS, [DEFAULT_TAB]);
     const savedActiveTab = getStoredData(STORAGE_KEYS.ACTIVE_TAB, DEFAULT_TAB_ID);
     setTabs(savedTabs);
@@ -56,32 +60,31 @@ export function CountTabs() {
 
   // 只在客户端挂载后保存数据
   useEffect(() => {
-    if (mounted) {
-      saveToStorage(STORAGE_KEYS.TABS, tabs);
-    }
-  }, [tabs, mounted]);
+    saveToStorage(STORAGE_KEYS.TABS, tabs);
+  }, [tabs]);
 
   useEffect(() => {
-    if (mounted) {
-      saveToStorage(STORAGE_KEYS.ACTIVE_TAB, activeTab);
-    }
-  }, [activeTab, mounted]);
+    saveToStorage(STORAGE_KEYS.ACTIVE_TAB, activeTab);
+  }, [activeTab]);
 
   // 事件处理函数
   const addNewTab = () => {
     const newId = uuidv4(); // 使用 UUID 生成唯一 ID
-    setTabs(prev => [...prev, {
-      ...DEFAULT_TAB,
-      id: newId,
-      title: `Untitled`, // 使用 UUID 的后3位作为显示
-    }]);
+    setTabs((prev) => [
+      ...prev,
+      {
+        ...DEFAULT_TAB,
+        id: newId,
+        title: `Untitled`,
+      },
+    ]);
     setActiveTab(newId);
   };
 
   const removeTab = (id: string) => {
     if (tabs.length === 1) return;
-    setTabs(prev => {
-      const newTabs = prev.filter(tab => tab.id !== id);
+    setTabs((prev) => {
+      const newTabs = prev.filter((tab) => tab.id !== id);
       if (activeTab === id) {
         setActiveTab(newTabs[newTabs.length - 1].id);
       }
@@ -90,29 +93,27 @@ export function CountTabs() {
   };
 
   const updateTabData = (id: string, newData: Partial<RequestData>) => {
-    setTabs(prev => prev.map(tab =>
-      tab.id === id
-        ? { ...tab, requestData: { ...tab.requestData, ...newData } }
-        : tab
-    ));
+    setTabs((prev) =>
+      prev.map((tab) =>
+        tab.id === id ? { ...tab, requestData: { ...tab.requestData, ...newData } } : tab,
+      ),
+    );
   };
 
   const updateActiveRequestTab = (id: string, value: string) => {
-    setTabs(prev => prev.map(tab =>
-      tab.id === id ? { ...tab, activeRequestTab: value } : tab
-    ));
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === id ? { ...tab, activeRequestTab: value } : tab)),
+    );
   };
 
   const updateActiveResponseTab = (id: string, value: string) => {
-    setTabs(prev => prev.map(tab =>
-      tab.id === id ? { ...tab, activeResponseTab: value } : tab
-    ));
+    setTabs((prev) =>
+      prev.map((tab) => (tab.id === id ? { ...tab, activeResponseTab: value } : tab)),
+    );
   };
 
   const setResponseData = (id: string, value: ResponseData) => {
-    setTabs(prev => prev.map(tab =>
-      tab.id === id ? { ...tab, responseData: value } : tab
-    ));
+    setTabs((prev) => prev.map((tab) => (tab.id === id ? { ...tab, responseData: value } : tab)));
   };
 
   const handleTitleEdit = (tab: TabData) => {
@@ -122,9 +123,9 @@ export function CountTabs() {
 
   const handleTitleSave = () => {
     if (editingTab) {
-      setTabs(prev => prev.map(tab =>
-        tab.id === editingTab.id ? { ...tab, title: newTitle } : tab
-      ));
+      setTabs((prev) =>
+        prev.map((tab) => (tab.id === editingTab.id ? { ...tab, title: newTitle } : tab)),
+      );
       setEditingTab(null);
     }
   };
@@ -134,11 +135,16 @@ export function CountTabs() {
     <TabsTrigger
       key={tab.id}
       value={tab.id}
-      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0,0_-1px_0_0] hover:bg-primary/10"
+      className="group relative h-auto w-40 justify-start bg-transparent mr-0 border-none cursor-pointer data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_1px_0_0_var(--primary),0_-1px_0_0_var(--primary)] hover:bg-primary/10"
       onDoubleClick={() => handleTitleEdit(tab)}
     >
       <div className="flex items-center h-6 leading-6 px-2">
-        <div className={cn('text-xs font-medium mr-1', MethodColorMap[tab.requestData.method as keyof typeof MethodColorMap])}>
+        <div
+          className={cn(
+            'text-xs font-medium mr-1',
+            MethodColorMap[tab.requestData.method as keyof typeof MethodColorMap],
+          )}
+        >
           {tab.requestData.method}
         </div>
         <div className="truncate w-20 text-[13px]">{tab.title}</div>
@@ -211,7 +217,9 @@ export function CountTabs() {
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingTab(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setEditingTab(null)}>
+              Cancel
+            </Button>
             <Button onClick={handleTitleSave}>Save</Button>
           </DialogFooter>
         </DialogContent>
