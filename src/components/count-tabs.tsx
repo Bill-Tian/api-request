@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Request } from '@/components/request';
 import { Response } from '@/components/response';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -50,6 +50,7 @@ export function CountTabs() {
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB_ID);
   const [editingTab, setEditingTab] = useState<TabData | null>(null);
   const [newTitle, setNewTitle] = useState('');
+  const tabsListRef = useRef<HTMLDivElement>(null);
 
   // 在客户端挂载后从 sessionStorage 加载数据
   useEffect(() => {
@@ -70,7 +71,7 @@ export function CountTabs() {
 
   // 事件处理函数
   const addNewTab = () => {
-    const newId = uuidv4(); // 使用 UUID 生成唯一 ID
+    const newId = uuidv4();
     setTabs((prev) => [
       ...prev,
       {
@@ -80,6 +81,13 @@ export function CountTabs() {
       },
     ]);
     setActiveTab(newId);
+    
+    // 在下一个渲染周期滚动到最右侧
+    setTimeout(() => {
+      if (tabsListRef.current) {
+        tabsListRef.current.scrollLeft = tabsListRef.current.scrollWidth;
+      }
+    }, 0);
   };
 
   const removeTab = (id: string) => {
@@ -204,7 +212,7 @@ export function CountTabs() {
     <div className="max-w-6xl mx-auto my-2 border border-border rounded p-4">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full h-auto justify-start rounded-none p-0">
-          <div className="flex items-center overflow-x-auto custom-scrollbar">
+          <div ref={tabsListRef} className="flex items-center overflow-x-auto custom-scrollbar">
             {tabs.map(renderTabTrigger)}
           </div>
           <Plus size={16} className="mx-4 cursor-pointer" onClick={addNewTab} />
