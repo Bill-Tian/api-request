@@ -12,6 +12,9 @@ import {
   OverflowTabsTrigger,
   OverflowTabsContent,
 } from '@/components/ui/overflow-tabs';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { InfoTable } from './info-table';
 
 interface RequestTabsProps {
   params: ParamType[];
@@ -23,6 +26,12 @@ interface RequestTabsProps {
   activeTab: string;
   onTabChange: (value: string) => void;
 }
+
+const bodyTypeList = [
+  { value: 'none', label: 'None' },
+  { value: 'json', label: 'JSON' },
+  { value: 'form-data', label: 'Form Data' },
+];
 
 export const RequestTabGroup = ({
   params,
@@ -62,6 +71,7 @@ export const RequestTabGroup = ({
     onHeadersChange(headers.filter((_, i) => i !== index));
   };
 
+  const [bodyType, setBodyType] = React.useState('none');
   return (
     <OverflowTabs value={activeTab} onValueChange={onTabChange}>
       <OverflowTabsList>
@@ -126,7 +136,30 @@ export const RequestTabGroup = ({
         </div>
       </OverflowTabsContent>
       <OverflowTabsContent value="tab3">
-        <CodeBody codeValue={body} onChange={onBodyChange} height="240px" />
+        <RadioGroup
+          value={bodyType}
+          defaultValue="none"
+          className="flex gap-6 my-4 text-xs"
+          onValueChange={(value) => setBodyType(value)}
+        >
+          {bodyTypeList.map((item) => (
+            <div className="flex items-center space-x-2" key={item.value}>
+              <RadioGroupItem value={item.value} id={item.value} />
+              <Label htmlFor={item.value} className="text-xs">
+                {item.label}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+        {bodyType === 'none' ? (
+          <div className="flex items-center justify-center h-60 text-muted-foreground">
+            This request does not have a body
+          </div>
+        ) : bodyType === 'json' ? (
+          <CodeBody codeValue={body} onChange={onBodyChange} height="240px" />
+        ) : (
+          <InfoTable list={[{ key: 'test', value: 'test' }]} />
+        )}
       </OverflowTabsContent>
     </OverflowTabs>
   );

@@ -53,7 +53,7 @@ export const Response = ({
   };
 
   return (
-    <div>
+    <div className="pt-2 mt-4 border-t border-border">
       <h3 className="text-xl font-bold">Response</h3>
       {response?.status ? <RenderedResponseMeta /> : null}
       <div className="relative">

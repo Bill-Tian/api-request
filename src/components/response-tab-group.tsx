@@ -50,7 +50,7 @@ export const ResponseTabGroup = ({
           type={response?.type}
           editable={false}
           codeValue={response?.data ? JSON.stringify(response?.data, null, 2) : ''}
-          minHeight="100px"
+          minHeight="240px"
           maxHeight="400px"
         />
       </OverflowTabsContent>
