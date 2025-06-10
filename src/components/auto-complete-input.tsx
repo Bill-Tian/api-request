@@ -66,7 +66,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         onChange={handleInputChange}
         onFocus={() => setIsOpen(true)}
         placeholder={placeholder}
-        className="rounded-none"
+        className="rounded-none border-none shadow-none focus-visible:ring-0 h-6 p-0"
       />
       {isOpen && filteredOptions.length > 0 && (
         <div className="absolute z-10 w-full mt-1 bg-background border border-border shadow-lg max-h-60 overflow-auto">

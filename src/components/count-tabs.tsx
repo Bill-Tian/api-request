@@ -30,6 +30,7 @@ const DEFAULT_TAB: TabData = {
     params: [{ key: '', value: '' }],
     headers: [{ key: 'Content-Type', value: 'application/json' }],
     body: '',
+    bodyType: 'none',
   },
   activeRequestTab: 'tab1',
   activeResponseTab: 'tab1',

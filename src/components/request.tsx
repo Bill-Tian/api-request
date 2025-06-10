@@ -25,6 +25,18 @@ export const Request = ({
   setResponse,
   loading,
 }: RequestResponseProps) => {
+  const handleBodyTypeChange = (bodyType: 'none' | 'json' | 'form-data') => {
+    let newBody: string | Array<{ key: string; value: string; contentType?: string; file?: File | null }>;
+    if (bodyType === 'json') {
+      newBody = '';
+    } else if (bodyType === 'form-data') {
+      newBody = [{ key: '', value: '', contentType: 'auto', file: null }];
+    } else {
+      newBody = '';
+    }
+    onDataChange({ bodyType, body: newBody });
+  };
+
   const send = async () => {
     if (!data.url) {
       toast.warning('Please enter a URL', {
@@ -53,6 +65,8 @@ export const Request = ({
         method: data.method,
         url: paramsUrl || data.url,
         headers,
+        body: data.body,
+        bodyType: data.bodyType,
       };
 
       setLoading(true);
@@ -86,6 +100,8 @@ export const Request = ({
           onBodyChange={(body) => onDataChange({ body })}
           activeTab={activeRequestTab}
           onTabChange={onRequestTabChange}
+          bodyType={data.bodyType}
+          onBodyTypeChange={handleBodyTypeChange}
         />
       </div>
     </div>

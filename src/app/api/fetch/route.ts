@@ -2,13 +2,31 @@ import { isJson } from '@/lib/utils';
 
 export const POST = async (req: Request) => {
   try {
-    const body = await req.json();
+    const formData = await req.formData();
     const startTime = new Date();
 
-    const response = await fetch(body.url, {
-      method: body.method,
-      body: body.body,
-      headers: body.headers,
+    const url = formData.get('url') as string;
+    const method = formData.get('method') as string;
+    const bodyType = formData.get('bodyType') as string;
+    const body = formData.get('body') as string;
+    const headers = JSON.parse(formData.get('headers') as string || '{}');
+
+    let requestBody: string | FormData | undefined = undefined;
+    if (bodyType === 'form-data') {
+      const formDataEntries = JSON.parse(body);
+      const formDataBody = new FormData();
+      formDataEntries.forEach(([key, value]: [string, any]) => {
+        formDataBody.append(key, value);
+      });
+      requestBody = formDataBody;
+    } else if (bodyType === 'json') {
+      requestBody = body;
+    }
+
+    const response = await fetch(url, {
+      method,
+      body: requestBody,
+      headers,
       cache: 'no-store',
     });
 

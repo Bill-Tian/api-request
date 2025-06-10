@@ -19,10 +19,12 @@ import { InfoTable } from './info-table';
 interface RequestTabsProps {
   params: ParamType[];
   headers: ParamType[];
-  body: string;
+  body: string | Array<{ key: string; value: string; contentType?: string; file?: File | null }>;
+  bodyType: 'none' | 'json' | 'form-data';
   onParamsChange: (params: ParamType[]) => void;
   onHeadersChange: (headers: ParamType[]) => void;
-  onBodyChange: (body: string) => void;
+  onBodyChange: (body: string | Array<{ key: string; value: string; contentType?: string; file?: File | null }>) => void;
+  onBodyTypeChange: (bodyType: 'none' | 'json' | 'form-data') => void;
   activeTab: string;
   onTabChange: (value: string) => void;
 }
@@ -37,19 +39,29 @@ export const RequestTabGroup = ({
   params,
   headers,
   body,
+  bodyType,
   onParamsChange,
   onHeadersChange,
   onBodyChange,
+  onBodyTypeChange,
   activeTab,
   onTabChange,
 }: RequestTabsProps) => {
-  const handleParamChange = (index: number, field: 'key' | 'value', value: string) => {
+  const handleParamChange = (
+    index: number,
+    field: 'key' | 'value' | 'contentType',
+    value: string,
+  ) => {
     const newParams = [...params];
     newParams[index] = { ...newParams[index], [field]: value };
     onParamsChange(newParams);
   };
 
-  const handleHeaderChange = (index: number, field: 'key' | 'value', value: string) => {
+  const handleHeaderChange = (
+    index: number,
+    field: 'key' | 'value' | 'contentType',
+    value: string,
+  ) => {
     const newHeaders = [...headers];
     newHeaders[index] = { ...newHeaders[index], [field]: value };
     onHeadersChange(newHeaders);
@@ -71,7 +83,38 @@ export const RequestTabGroup = ({
     onHeadersChange(headers.filter((_, i) => i !== index));
   };
 
-  const [bodyType, setBodyType] = React.useState('none');
+  const handleFormDataChange = (
+    index: number,
+    field: 'key' | 'value' | 'contentType',
+    value: string,
+  ) => {
+    if (Array.isArray(body)) {
+      const newBody = [...body];
+      newBody[index] = { ...newBody[index], [field]: value };
+      onBodyChange(newBody);
+    }
+  };
+
+  const handleAddFormData = () => {
+    if (Array.isArray(body)) {
+      onBodyChange([...body, { key: '', value: '' }]);
+    }
+  };
+
+  const handleDeleteFormData = (index: number) => {
+    if (Array.isArray(body)) {
+      onBodyChange(body.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleFileChange = (index: number, file: File | null) => {
+    if (Array.isArray(body)) {
+      const newBody = [...body];
+      newBody[index] = { ...newBody[index], file };
+      onBodyChange(newBody);
+    }
+  };
+
   return (
     <OverflowTabs value={activeTab} onValueChange={onTabChange}>
       <OverflowTabsList>
@@ -81,58 +124,26 @@ export const RequestTabGroup = ({
       </OverflowTabsList>
       <OverflowTabsContent value="tab1">
         <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
-          <div className="flex items-center justify-between mb-1">
-            <label className="inline-block text-sm font-medium text-gray-500 mb-2">
-              Query Parameters
-            </label>
-            <div className="flex items-center">
-              <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddParam} />
-            </div>
-          </div>
-
-          {params.length === 0 ? (
-            <div className="flex items-center justify-center h-[calc(100%-32px)]">
-              <DataEmpty />
-            </div>
-          ) : (
-            params.map((item, index) => (
-              <InputParam
-                key={index}
-                param={item}
-                index={index}
-                onChange={handleParamChange}
-                onDelete={handleDeleteParam}
-              />
-            ))
-          )}
+          <label className="inline-block text-sm font-medium text-gray-500 mb-3">
+            Query Parameters
+          </label>
+          <InfoTable
+            list={params}
+            inputOnChange={handleParamChange}
+            handleAddParam={handleAddParam}
+            handleDeleteParam={handleDeleteParam}
+          />
         </div>
       </OverflowTabsContent>
       <OverflowTabsContent value="tab2">
         <div className="h-[240px] overflow-auto custom-scrollbar pr-2">
-          <div className="flex items-center justify-between mb-1">
-            <label className="inline-block text-sm font-medium text-gray-500 mb-2">
-              Header List
-            </label>
-            <div className="flex items-center">
-              <Plus size={16} className="ml-2 cursor-pointer" onClick={handleAddHeader} />
-            </div>
-          </div>
-          {headers.length === 0 ? (
-            <div className="flex items-center justify-center h-[calc(100%-32px)]">
-              <DataEmpty />
-            </div>
-          ) : (
-            headers.map((item, index) => (
-              <InputParam
-                isHeader={true}
-                key={index}
-                param={item}
-                index={index}
-                onChange={handleHeaderChange}
-                onDelete={handleDeleteHeader}
-              />
-            ))
-          )}
+          <label className="inline-block text-sm font-medium text-gray-500 mb-3">Header List</label>
+          <InfoTable
+            list={headers}
+            inputOnChange={handleHeaderChange}
+            handleAddParam={handleAddHeader}
+            handleDeleteParam={handleDeleteHeader}
+          />
         </div>
       </OverflowTabsContent>
       <OverflowTabsContent value="tab3">
@@ -140,7 +151,7 @@ export const RequestTabGroup = ({
           value={bodyType}
           defaultValue="none"
           className="flex gap-6 my-4 text-xs"
-          onValueChange={(value) => setBodyType(value)}
+          onValueChange={(value) => onBodyTypeChange(value as 'none' | 'json' | 'form-data')}
         >
           {bodyTypeList.map((item) => (
             <div className="flex items-center space-x-2" key={item.value}>
@@ -151,15 +162,24 @@ export const RequestTabGroup = ({
             </div>
           ))}
         </RadioGroup>
-        {bodyType === 'none' ? (
-          <div className="flex items-center justify-center h-60 text-muted-foreground">
-            This request does not have a body
-          </div>
-        ) : bodyType === 'json' ? (
-          <CodeBody codeValue={body} onChange={onBodyChange} height="240px" />
-        ) : (
-          <InfoTable list={[{ key: 'test', value: 'test' }]} />
-        )}
+        <div className="flex h-60 overflow-auto custom-scrollbar pr-2">
+          {bodyType === 'none' ? (
+            <div className="flex items-center justify-center h-60 text-muted-foreground">
+              This request does not have a body
+            </div>
+          ) : bodyType === 'json' ? (
+            <CodeBody codeValue={typeof body === 'string' ? body : ''} onChange={onBodyChange} height="240px" />
+          ) : (
+            <InfoTable
+              showUpload={true}
+              list={Array.isArray(body) ? body : [{ key: '', value: '', contentType: 'auto', file: null }]}
+              inputOnChange={handleFormDataChange}
+              handleAddParam={handleAddFormData}
+              handleDeleteParam={handleDeleteFormData}
+              handleFileChange={handleFileChange}
+            />
+          )}
+        </div>
       </OverflowTabsContent>
     </OverflowTabs>
   );

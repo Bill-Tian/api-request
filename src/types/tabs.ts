@@ -3,7 +3,8 @@ export interface RequestData {
   url: string;
   params: Array<{ key: string; value: string }>;
   headers: Array<{ key: string; value: string }>;
-  body: string;
+  bodyType: 'none' | 'json' | 'form-data';
+  body: string | Array<{ key: string; value: string; contentType?: string; file?: File | null }>;
 }
 
 export interface ResponseData {
