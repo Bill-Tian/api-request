@@ -13,12 +13,30 @@ export const POST = async (req: Request) => {
 
     let requestBody: string | FormData | undefined = undefined;
     if (bodyType === 'form-data') {
-      const formDataEntries = JSON.parse(body);
       const formDataBody = new FormData();
-      formDataEntries.forEach(([key, value]: [string, any]) => {
-        formDataBody.append(key, value);
+      
+      // 处理非文件数据
+      const nonFileItems = JSON.parse(body);
+      nonFileItems.forEach((item: { key: string; value: string; contentType?: string }) => {
+        formDataBody.append(
+          item.key,
+          new Blob([item.value], { type: item.contentType || '' }),
+        );
       });
+
+      // 处理文件数据
+      const fileCount = parseInt(formData.get('fileCount') as string || '0');
+      for (let i = 0; i < fileCount; i++) {
+        const file = formData.get(`file_${i}`) as File;
+        const key = formData.get(`file_key_${i}`) as string;
+        if (file && key) {
+          formDataBody.append(key, file);
+        }
+      }
+
       requestBody = formDataBody;
+      // 删除手动设置的 Content-Type，让浏览器自动处理
+      delete headers['Content-Type'];
     } else if (bodyType === 'json') {
       requestBody = body;
     }

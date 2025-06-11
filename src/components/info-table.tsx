@@ -9,9 +9,10 @@ import {
 } from '@/components/ui/table';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { File, Plus, Trash2 } from 'lucide-react';
 import AutocompleteInput from './auto-complete-input';
 import { useCallback } from 'react';
+import { RequestHeader } from '@/lib/constants';
 
 export interface InfoItem {
   key: string;
@@ -21,7 +22,10 @@ export interface InfoItem {
 }
 
 export interface InfoTableProps {
+  isResponse?: boolean;
+  isHeader?: boolean;
   showUpload?: boolean;
+  showContentType?: boolean;
   list?: InfoItem[];
   inputOnChange: (index: number, field: 'key' | 'value' | 'contentType', value: string) => void;
   handleAddParam: () => void;
@@ -31,7 +35,10 @@ export interface InfoTableProps {
 }
 
 export const InfoTable = ({
+  isResponse = false,
+  isHeader = false,
   showUpload = false,
+  showContentType = false,
   list = [],
   inputOnChange,
   handleAddParam,
@@ -57,7 +64,9 @@ export const InfoTable = ({
           {showUpload && (
             <>
               <TableHead className="border-r h-8 font-medium text-gray-500">Upload</TableHead>
-              <TableHead className="border-r h-8 font-medium text-gray-500">Content Type</TableHead>
+              {showContentType && (
+                <TableHead className="border-r h-8 font-medium text-gray-500">Content Type</TableHead>
+              )}
             </>
           )}
           <TableHead className="border-r w-10 h-8 text-center">
@@ -76,22 +85,37 @@ export const InfoTable = ({
         {list.map((item, index) => (
           <TableRow key={index} className="hover:bg-transparent">
             <TableCell className="border-r py-1">
-              <Input
-                placeholder="Key"
-                className="rounded-none border-none shadow-none focus-visible:ring-0 h-6 p-0 placeholder:text-muted-foreground/40"
-                value={item.key}
-                onChange={(e) => inputOnChange(index, 'key', e.target.value)}
-                disabled={disabled}
-              />
+              {isHeader ? (
+                <AutocompleteInput
+                  value={item.key}
+                  onChange={(value) => inputOnChange(index, 'key', value)}
+                  options={RequestHeader.map((item) => item.label)}
+                />
+              ) : (
+                <Input
+                  placeholder="Key"
+                  className="rounded-none border-none shadow-none focus-visible:ring-0 h-6 p-0 placeholder:text-muted-foreground/40"
+                  value={item.key}
+                  onChange={(e) => inputOnChange(index, 'key', e.target.value)}
+                  disabled={disabled}
+                />
+              )}
             </TableCell>
             <TableCell className="border-r py-1">
-              <Input
-                placeholder="Value"
-                className="rounded-none border-none shadow-none focus-visible:ring-0 h-6 p-0 placeholder:text-muted-foreground/40"
-                value={item.value}
-                onChange={(e) => inputOnChange(index, 'value', e.target.value)}
-                disabled={disabled}
-              />
+              {item.file ? (
+                <span className="inline-flex items-center gap-1 p-1 text-xs bg-border rounded">
+                  <File size={16} className="text-muted-foreground" />
+                  <span className="text-muted-foreground">{item.file.name}</span>
+                </span>
+              ) : (
+                <Input
+                  placeholder="Value"
+                  className="rounded-none border-none shadow-none focus-visible:ring-0 h-6 p-0 placeholder:text-muted-foreground/40"
+                  value={item.value}
+                  onChange={(e) => inputOnChange(index, 'value', e.target.value)}
+                  disabled={disabled}
+                />
+              )}
             </TableCell>
             {showUpload && (
               <>
@@ -103,14 +127,16 @@ export const InfoTable = ({
                     disabled={disabled}
                   />
                 </TableCell>
-                <TableCell className="border-r py-1">
-                  <AutocompleteInput
-                    placeholder="Auto (Content Type)"
-                    value={item.contentType || ''}
-                    onChange={(value) => inputOnChange(index, 'contentType', value)}
-                    options={['application/json', 'application/xml', 'text/plain']}
-                  />
-                </TableCell>
+                {showContentType && (
+                  <TableCell className="border-r py-1">
+                    <AutocompleteInput
+                      placeholder="Auto (Content Type)"
+                      value={item.contentType || ''}
+                      onChange={(value) => inputOnChange(index, 'contentType', value)}
+                      options={['application/json', 'application/xml', 'text/plain']}
+                    />
+                  </TableCell>
+                )}
               </>
             )}
             <TableCell className="border-r py-1 text-center">
@@ -130,7 +156,7 @@ export const InfoTable = ({
         ))}
         {list.length === 0 && (
           <TableRow>
-            <TableCell colSpan={showUpload ? 5 : 3} className="text-center text-gray-500 py-4">
+            <TableCell colSpan={showUpload ? (showContentType ? 5 : 4) : 3} className="text-center text-gray-500 py-4">
               NO DATA
             </TableCell>
           </TableRow>

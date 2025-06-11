@@ -16,15 +16,23 @@ export const sendRequest = async (options: RequestOptions) => {
 
   if (options.body) {
     if (options.bodyType === 'form-data' && Array.isArray(options.body)) {
-      const requestFormData = new FormData();
-      options.body.forEach((item) => {
+      // 分别处理文件和非文件数据
+      const fileItems = options.body.filter(item => item.file);
+      const nonFileItems = options.body.filter(item => !item.file);
+      
+      // 添加非文件数据
+      formData.append('body', JSON.stringify(nonFileItems));
+      
+      // 添加文件数据
+      fileItems.forEach((item, index) => {
         if (item.file) {
-          requestFormData.append(item.key, item.file);
-        } else {
-          requestFormData.append(item.key, item.value);
+          formData.append(`file_${index}`, item.file);
+          formData.append(`file_key_${index}`, item.key);
         }
       });
-      formData.append('body', JSON.stringify(Array.from(requestFormData.entries())));
+      
+      // 添加文件数量信息
+      formData.append('fileCount', fileItems.length.toString());
     } else {
       formData.append('body', options.body as string);
     }

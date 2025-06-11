@@ -18,7 +18,7 @@ export const CodeBody = ({
   minHeight = '100%',
   maxHeight = '100%',
 }: {
-  editable?: boolean; 
+  editable?: boolean;
   codeValue: string;
   onChange?: (val: string) => void;
   type?: string;
@@ -63,7 +63,7 @@ export const CodeBody = ({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <CodeMirror
         value={codeValue}
         height={height}

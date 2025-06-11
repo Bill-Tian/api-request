@@ -28,7 +28,7 @@ const DEFAULT_TAB: TabData = {
     method: 'GET',
     url: '',
     params: [{ key: '', value: '' }],
-    headers: [{ key: 'Content-Type', value: 'application/json' }],
+    headers: [{ key: '', value: '' }],
     body: '',
     bodyType: 'none',
   },
@@ -82,7 +82,7 @@ export function CountTabs() {
       },
     ]);
     setActiveTab(newId);
-    
+
     // 在下一个渲染周期滚动到最右侧
     setTimeout(() => {
       if (tabsListRef.current) {
@@ -145,7 +145,7 @@ export function CountTabs() {
     <TabsTrigger
       key={tab.id}
       value={tab.id}
-      className="group relative h-auto min-w-42 flex-shrink-0 justify-start bg-transparent mr-0 border-r-[0px] border-l border-l-solid border-l-border/60 last:border-r last:border-r-solid last:border-r-border/60 cursor-pointer text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_2px_0_0_var(--primary),0_-2px_0_0_var(--primary)] hover:bg-primary/10"
+      className="group relative h-auto min-w-42 flex-shrink-0 justify-start bg-transparent mr-0 border-t-0 border-b-0 border-r-[0px] border-l border-l-solid border-l-border/60 last:border-r last:border-r-solid last:border-r-border/60 cursor-pointer text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-background px-2 py-2 rounded-none data-[state=active]:shadow-[inset_0_2px_0_0_var(--primary),0_-2px_0_0_var(--primary)] hover:bg-primary/10"
       onDoubleClick={() => handleTitleEdit(tab)}
     >
       <div className="flex items-center h-6 leading-6 px-2">

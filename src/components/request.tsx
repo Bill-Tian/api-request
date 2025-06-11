@@ -30,7 +30,7 @@ export const Request = ({
     if (bodyType === 'json') {
       newBody = '';
     } else if (bodyType === 'form-data') {
-      newBody = [{ key: '', value: '', contentType: 'auto', file: null }];
+      newBody = [{ key: '', value: '', contentType: '', file: null }];
     } else {
       newBody = '';
     }
@@ -60,7 +60,7 @@ export const Request = ({
         });
         paramsUrl = `${data.url}?${params.toString()}`;
       }
-
+      console.log('data.body', data.body);
       const paramsOptions = {
         method: data.method,
         url: paramsUrl || data.url,
