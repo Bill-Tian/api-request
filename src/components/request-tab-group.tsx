@@ -137,6 +137,7 @@ export const RequestTabGroup = ({
       if (contentTypeHeader !== -1) {
         newHeaders[contentTypeHeader] = { key: 'Content-Type', value: contentType };
       } else {
+        newHeaders = newHeaders.filter((header) => header.key && header.value);
         newHeaders.push({ key: 'Content-Type', value: contentType });
       }
     }
